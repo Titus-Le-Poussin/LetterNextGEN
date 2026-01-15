@@ -8,6 +8,48 @@
 </head>
 <body>
     <div class="container">
+         <div class ="offer-section">
+            <h1>Offre</h1>
+            <div class="form-group-offer">
+                <label>Offre d'emplois</label>
+                <textarea id="jobOffer" placeholder="Collez l'offre d'emploi ici..."></textarea>
+            </div>
+            
+            <hr class="separator">
+            
+            <h2>Prompt IA</h2>
+            <div class="form-group-offer">
+                <label>Instructions pour l'IA</label>
+                <textarea id="aiPrompt" placeholder="Prompt pour l'IA...">Tu es un assistant qui analyse des offres d'emploi pour remplir automatiquement les champs d'une lettre de motivation.
+
+À partir de l'offre d'emploi fournie, extrais les informations suivantes au format JSON :
+
+{
+  "field1": "Domaine de l'entreprise (ex: la mobilité et l'innovation ferroviaire)",
+  "field2": "Type de projet, produit ou mission de l'entreprise (ex: digitalisation des services, optimisation des systèmes)",
+  "field3": "Langages, frameworks, outils recherchés (ex: programmation full stack, Python, React)",
+  "field4": "Technologies de l'entreprise / type de projet (ex: développement d'applications web)",
+  "field5": "Type de projet / technologie à mettre en avant par le candidat (ex: développement web et informatique)",
+  "field6": "Nom de l'entreprise",
+  "field7": "Intitulé exact du poste"
+}
+
+Règles importantes :
+- Pour field1 : identifie le SECTEUR d'activité principal
+- Pour field2 : liste les MISSIONS ou PROJETS concrets
+- Pour field3 : extrais les COMPÉTENCES TECHNIQUES demandées
+- Pour field4 : identifie les TECHNOLOGIES ou TYPES DE PROJETS de l'entreprise
+- Pour field5 : suggère des projets pertinents que le candidat pourrait mettre en avant
+- Réponds UNIQUEMENT avec le JSON, sans texte supplémentaire</textarea>
+            </div>
+            
+            <button type="button" id="generateBtn" onclick="generateLetter()" class="generate-btn">Remplir Automatiquement avec l'IA</button>
+            <div id="loadingMessage" style="display: none; margin-top: 15px; color: #005c1c; font-weight: 600; text-align: center;">
+                ⏳ Analyse en cours...
+            </div>
+            <div id="errorMessage" style="display: none; margin-top: 15px; color: #c70000; font-weight: 600; text-align: center;"></div>
+            
+        </div>
         <div class="editor-section">
             <h1>Lettre de motivation </h1>
             <form id="letterForm">

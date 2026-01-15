@@ -1,0 +1,14 @@
+{
+  "Développeur Web": {
+    "field3": "programmation full stack, développement web front/back",
+    "field5": "création d'un prototype de site portfolio en HTML/CSS : j'ai créé un site simple et responsive pour présenter mes projets, avec une navigation fluide entre les sections "Projets", "Compétences" et "Contact". L'accent est mis sur la clarté visuelle et l'accessibilité."
+  },
+  "Infographiste": {
+    "field3": "modélisation, rigging, animation, optimisation d'assets",
+    "field5": "réalisation d'assets 3D optimisés pour différents supports, incluant modélisation, texturing et rigging. Travail sur l'animation technique et la résolution de problèmes liés aux performances dans des projets personnels et scolaires."
+  },
+  "Développeur Python": {
+    "field3": "programmation Python, automatisation, scripts utilitaires",
+    "field5": "développement de petits projets Python pour automatiser des tâches ou manipuler des données, dans le but de renforcer mes bases en programmation et de les appliquer à des projets plus complexes."
+  }
+}

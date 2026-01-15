@@ -58,9 +58,15 @@ h2 {
     font-size: 14px;
     transition: all 0.3s ease;
     background-color: white;
-    height: 300px;
+    height: 180px;
     resize: none; 
     font-family: inherit; 
+}
+
+.form-group-offer textarea:focus {
+    outline: none;
+    border-color: #005c1c;
+    box-shadow: 0 0 0 3px rgba(0, 92, 28, 0.1);
 }
 
 .form-group input, .form-group select{ 
@@ -139,6 +145,12 @@ h2 {
 
 .generate-btn:active {
     transform: translateY(0);
+}
+
+.generate-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
 }
 
 .letter-preview {
