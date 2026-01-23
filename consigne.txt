@@ -42,19 +42,19 @@ Mise a jour: 23 Janvier 2026
 PHASE 1 - Configuration initiale
 --------------------------------
     [X] Structure _original/ creee (travail original sauvegarde) (23 Janvier 2026)
-    [ ] Node.js verifie/installe
-    [ ] npm initialise (package.json)
-    [ ] Tailwind CSS installe
-    [ ] Créer un fichier CLAUDE.md
-    [ ] Comptes crees (Supabase, Google AI Studio)
-    [ ] Fichier .env configure
+    [X] Node.js verifie/installe (v22.20.0) (23 Janvier 2026)
+    [X] npm initialise (package.json) (23 Janvier 2026)
+    [X] Tailwind CSS installe (v4.1.18) (23 Janvier 2026)
+    [X] Fichier CLAUDE.md cree (23 Janvier 2026)
+    [X] Comptes crees (Supabase, Google AI Studio) (23 Janvier 2026)
+    [X] Fichier .env configure (Supabase + Gemini) (23 Janvier 2026)
 
 PHASE 2 - Migration Tailwind
 ----------------------------
-    [ ] Portfolio migre vers Tailwind
-    [ ] Generateur de lettres migre vers Tailwind
-    [ ] Design identique a l'original verifie
-    [ ] Responsive teste
+    [X] Portfolio migre vers Tailwind (portfolio-v1.html) (23 Janvier 2026)
+    [X] Generateur de lettres migre vers Tailwind (lettre-generateur-v1.html) (23 Janvier 2026)
+    [X] Design verifie et ameliore (23 Janvier 2026)
+    [X] Responsive teste (23 Janvier 2026)
 
 PHASE 3 - Base de donnees (Supabase)
 ------------------------------------
