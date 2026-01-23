@@ -1,1301 +1,1157 @@
 ================================================================================
-        PLAN COMPLET : PORTFOLIO + GÉNÉRATEUR DE LETTRES DE MOTIVATION IA
+         GUIDE DU PROJET - PORTFOLIO & GENERATEUR DE LETTRES IA
 ================================================================================
 
-
-📋 RÉSUMÉ DU PROJET
-================================================================================
-
-Créer un portfolio personnel avec un générateur de lettres de motivation
-alimenté par l'IA Claude (Anthropic API).
-
-L'outil permet de :
-- Coller une offre d'emploi
-- Utiliser un prompt personnalisable pour analyser l'offre
-- Remplir automatiquement les champs d'une lettre de motivation
-- Générer un PDF professionnel
-- Sauvegarder et réutiliser ses propres prompts et modèles de lettres
+Auteur       : Timothee Ithier
+Projet       : T-ENT-500-LYN (Epitech Lyon)
+Derniere MAJ : 23 Janvier 2026
 
 
 ================================================================================
-🎯 PHASE 1 : CONFIGURATION DE L'ENVIRONNEMENT (2-3 heures)
+                    REGLES IMPORTANTES POUR CLAUDE
 ================================================================================
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 1.1 : Créer un compte Supabase                                   │
-└─────────────────────────────────────────────────────────────────────────┘
+    1. DOSSIER _original/ : NE PAS MODIFIER SANS AUTORISATION EXPLICITE
+       Ce dossier contient le travail original de Timothee en HTML/CSS brut.
+       Claude doit demander l'autorisation AVANT toute modification.
 
-1. Aller sur https://supabase.com
-2. Créer un compte gratuit
-3. Créer un nouveau projet
-   - Nom : "portfolio-lettres-motivation" (ou autre)
-   - Région : choisir la plus proche (Europe West par exemple)
-   - Mot de passe de base de données : BIEN LE NOTER !
-4. Attendre 2-3 minutes que le projet soit prêt
+    2. Chaque nouveau fichier cree doit contenir un commentaire explicatif:
+       - Pourquoi ce fichier existe
+       - Son role dans le projet
+       - Exemple simple d'utilisation (si pertinent)
+       Le commentaire doit etre concis, pas de blabla.
 
+    3. Toujours lire ce fichier au debut de chaque session pour connaitre
+       l'etat d'avancement du projet.
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 1.2 : Récupérer les clés API Supabase                            │
-└─────────────────────────────────────────────────────────────────────────┘
+    4. FICHIER README.txt (racine) :
+       - NE PAS ECRASER sauf si explicitement demande par Timothee
+       - Ce fichier sert aux autres utilisateurs pour comprendre le projet
 
-1. Dans le tableau de bord Supabase
-2. Aller dans "Settings" (icône engrenage en bas à gauche)
-3. Cliquer sur "API"
-4. Noter ces 2 informations IMPORTANTES :
-   
-   → Project URL : https://xxxxxxxxxx.supabase.co
-   → anon public key : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....
-   
-   ⚠️ GARDER CES CLÉS EN SÉCURITÉ !
-
-
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 1.3 : Créer un compte Anthropic et obtenir l'API key             │
-└─────────────────────────────────────────────────────────────────────────┘
-
-1. Aller sur https://console.anthropic.com
-2. Créer un compte
-3. Ajouter un moyen de paiement (obligatoire même pour tester)
-4. Aller dans "API Keys"
-5. Créer une nouvelle clé API
-6. COPIER ET SAUVEGARDER cette clé : sk-ant-api03-...
-   
-   ⚠️ Cette clé ne sera affichée qu'une seule fois !
-
-
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 1.4 : Préparer la structure du projet                            │
-└─────────────────────────────────────────────────────────────────────────┘
-
-Créer cette structure de dossiers :
-
-portfolio-projet/
-│
-├── index.html              (ton portfolio actuel)
-├── style2.css              (ton CSS actuel)
-├── lettre-motivation.html  (ta page de génération de lettres)
-│
-├── js/
-│   ├── supabase-client.js  (connexion à Supabase)
-│   ├── auth.js             (gestion authentification)
-│   ├── prompts.js          (gestion des prompts personnalisés)
-│   ├── templates.js        (gestion des templates de lettres)
-│   └── letter-generator.js (logique de génération avec Claude)
-│
-├── backend/
-│   └── edge-functions/
-│       └── generate-letter/
-│           └── index.ts    (fonction serverless pour appeler Claude API)
-│
-└── .env                    (fichier de variables d'environnement - NE PAS COMMIT)
-
+    5. Fichier consigne.txt(racine): 
+    - METTRE A JOUR (ajouter/modifier) apres chaque session de travail
+    - Y indiquer: ce qui a ete fait, l'etat du projet, prochaines etapes
 
 
 ================================================================================
-🗄️ PHASE 2 : CRÉATION DE LA BASE DE DONNÉES SUPABASE (1-2 heures)
+                        ETAT D'AVANCEMENT DU PROJET
 ================================================================================
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 2.1 : Créer la table "prompts"                                   │
-└─────────────────────────────────────────────────────────────────────────┘
+Mise a jour: 23 Janvier 2026
 
-1. Dans Supabase, aller dans "Table Editor"
-2. Cliquer sur "New table"
-3. Créer la table avec ces paramètres :
+PHASE 1 - Configuration initiale
+--------------------------------
+    [X] Structure _original/ creee (travail original sauvegarde) (23 Janvier 2026)
+    [ ] Node.js verifie/installe
+    [ ] npm initialise (package.json)
+    [ ] Tailwind CSS installe
+    [ ] Créer un fichier CLAUDE.md
+    [ ] Comptes crees (Supabase, Google AI Studio)
+    [ ] Fichier .env configure
 
-   Nom de la table : prompts
-   
-   Colonnes :
-   ┌──────────────┬──────────┬───────────┬─────────────────────────────┐
-   │ Nom          │ Type     │ Défaut    │ Description                 │
-   ├──────────────┼──────────┼───────────┼─────────────────────────────┤
-   │ id           │ uuid     │ gen_rand  │ ID unique auto-généré       │
-   │ user_id      │ uuid     │ null      │ ID de l'utilisateur         │
-   │ name         │ text     │ -         │ Nom du prompt               │
-   │ content      │ text     │ -         │ Contenu du prompt           │
-   │ is_default   │ boolean  │ false     │ Est-ce le prompt par défaut │
-   │ created_at   │ timestamp│ now()     │ Date de création            │
-   │ updated_at   │ timestamp│ now()     │ Date de modification        │
-   └──────────────┴──────────┴───────────┴─────────────────────────────┘
+PHASE 2 - Migration Tailwind
+----------------------------
+    [ ] Portfolio migre vers Tailwind
+    [ ] Generateur de lettres migre vers Tailwind
+    [ ] Design identique a l'original verifie
+    [ ] Responsive teste
 
-4. Activer "Enable Row Level Security (RLS)"
-5. Cliquer sur "Save"
+PHASE 3 - Base de donnees (Supabase)
+------------------------------------
+    [ ] Table "prompts" creee
+    [ ] Table "letter_templates" creee
+    [ ] Table "generated_letters" creee
+    [ ] Politiques RLS configurees
+    [ ] Donnees par defaut inserees
 
+PHASE 4 - Authentification
+--------------------------
+    [ ] Auth Supabase activee
+    [ ] Interface connexion/inscription
+    [ ] Gestion de session
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 2.2 : Créer la table "letter_templates"                          │
-└─────────────────────────────────────────────────────────────────────────┘
+PHASE 5 - APIs IA
+-----------------
+    [ ] Supabase CLI installe
+    [ ] Edge Function creee
+    [ ] Integration Gemini
+    [ ] Integration Claude
 
-1. Créer une nouvelle table
-2. Paramètres :
-
-   Nom de la table : letter_templates
-   
-   Colonnes :
-   ┌──────────────┬──────────┬───────────┬─────────────────────────────┐
-   │ Nom          │ Type     │ Défaut    │ Description                 │
-   ├──────────────┼──────────┼───────────┼─────────────────────────────┤
-   │ id           │ uuid     │ gen_rand  │ ID unique auto-généré       │
-   │ user_id      │ uuid     │ null      │ ID de l'utilisateur         │
-   │ name         │ text     │ -         │ Nom du template             │
-   │ content      │ text     │ -         │ HTML du template            │
-   │ is_default   │ boolean  │ false     │ Est-ce le template par déf. │
-   │ created_at   │ timestamp│ now()     │ Date de création            │
-   │ updated_at   │ timestamp│ now()     │ Date de modification        │
-   └──────────────┴──────────┴───────────┴─────────────────────────────┘
-
-3. Activer "Enable Row Level Security (RLS)"
-4. Cliquer sur "Save"
+PHASE 6 - Deploiement
+---------------------
+    [ ] Tests locaux
+    [ ] Site deploye
 
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 2.3 : Créer la table "generated_letters" (optionnel)             │
-└─────────────────────────────────────────────────────────────────────────┘
+================================================================================
+                         STRUCTURE ACTUELLE DU PROJET
+================================================================================
 
-Pour sauvegarder l'historique des lettres générées :
-
-   Nom de la table : generated_letters
-   
-   Colonnes :
-   ┌──────────────┬──────────┬───────────┬─────────────────────────────┐
-   │ Nom          │ Type     │ Défaut    │ Description                 │
-   ├──────────────┼──────────┼───────────┼─────────────────────────────┤
-   │ id           │ uuid     │ gen_rand  │ ID unique                   │
-   │ user_id      │ uuid     │ null      │ ID de l'utilisateur         │
-   │ company_name │ text     │ -         │ Nom de l'entreprise         │
-   │ job_title    │ text     │ -         │ Intitulé du poste           │
-   │ content      │ text     │ -         │ Contenu de la lettre        │
-   │ created_at   │ timestamp│ now()     │ Date de création            │
-   └──────────────┴──────────┴───────────┴─────────────────────────────┘
-
-
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 2.4 : Configurer les politiques RLS (Row Level Security)         │
-└─────────────────────────────────────────────────────────────────────────┘
-
-Pour chaque table, créer ces politiques :
-
-1. Dans "Table Editor", sélectionner la table "prompts"
-2. Aller dans l'onglet "RLS Policies"
-3. Cliquer sur "New Policy"
-
-   POLITIQUE 1 : Lecture publique des prompts par défaut
-   ────────────────────────────────────────────────────
-   - Policy name : "Allow public read for default prompts"
-   - Policy command : SELECT
-   - Using expression : is_default = true
-
-   POLITIQUE 2 : Lecture des prompts de l'utilisateur
-   ───────────────────────────────────────────────────
-   - Policy name : "Allow users to read their own prompts"
-   - Policy command : SELECT
-   - Using expression : auth.uid() = user_id
-
-   POLITIQUE 3 : Création de prompts
-   ──────────────────────────────────
-   - Policy name : "Allow users to create prompts"
-   - Policy command : INSERT
-   - With check : auth.uid() = user_id
-
-   POLITIQUE 4 : Modification de prompts
-   ──────────────────────────────────────
-   - Policy name : "Allow users to update their own prompts"
-   - Policy command : UPDATE
-   - Using expression : auth.uid() = user_id
-
-   POLITIQUE 5 : Suppression de prompts
-   ─────────────────────────────────────
-   - Policy name : "Allow users to delete their own prompts"
-   - Policy command : DELETE
-   - Using expression : auth.uid() = user_id
-
-⚠️ RÉPÉTER CES 5 POLITIQUES pour la table "letter_templates"
-
-⚠️ Pour "generated_letters", créer uniquement les politiques 2, 3, 4, 5
+T-ENT-500-LYN_timothee-ithier/
+|
+|-- _original/                    TRAVAIL ORIGINAL (NE PAS MODIFIER)
+|   |-- portfolio/
+|   |   |-- portfolio.html        Portfolio HTML/CSS brut
+|   |   |-- portfolio.css
+|   |-- lettre/
+|       |-- lettre-generateur.html
+|       |-- lettre-generateur.css
+|       |-- test/
+|           |-- lettre-test.html  Version avec API
+|           |-- lettre-test.css
+|           |-- data.js
+|           |-- *.json            Donnees
+|
+|-- index.html                    Portfolio (a migrer vers Tailwind)
+|-- style2.css                    CSS actuel (sera remplace)
+|-- lettre/                       Generateur (a migrer)
+|-- picture/                      Images et videos
+|-- consigne.txt                  Ce fichier
+|-- .env                          Variables d'environnement (a configurer)
+|-- .gitignore
 
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 2.5 : Insérer les données par défaut                             │
-└─────────────────────────────────────────────────────────────────────────┘
+================================================================================
 
-1. Dans Supabase, aller dans "SQL Editor"
-2. Créer une nouvelle requête
-3. Coller ce code SQL :
+================================================================================
+                            TABLE DES MATIERES
+================================================================================
 
-```sql
--- Insérer le prompt par défaut
-INSERT INTO prompts (user_id, name, content, is_default)
-VALUES (
-  null,
-  'Prompt Standard',
-  'Tu es un assistant qui analyse des offres d''emploi pour remplir automatiquement les champs d''une lettre de motivation.
+    1.  Presentation du projet
+    2.  Technologies utilisees (avec explications)
+    3.  Architecture du projet
+    4.  Phase 1 : Configuration initiale
+    5.  Phase 2 : Migration vers Tailwind CSS
+    6.  Phase 3 : Base de donnees (Supabase)
+    7.  Phase 4 : Authentification utilisateur
+    8.  Phase 5 : Integration des APIs IA (Claude + Gemini)
+    9.  Phase 6 : Tests et deploiement
+    10. Ressources et liens utiles
 
-À partir de l''offre d''emploi fournie, extrais les informations suivantes au format JSON :
+================================================================================
 
-{
-  "field1": "Domaine de l''entreprise (ex: la mobilité et l''innovation ferroviaire)",
-  "field2": "Type de projet, produit ou mission de l''entreprise (ex: digitalisation des services, optimisation des systèmes)",
-  "field3": "Langages, frameworks, outils recherchés (ex: programmation full stack, Python, React)",
-  "field4": "Technologies de l''entreprise / type de projet (ex: développement d''applications web)",
-  "field5": "Type de projet / technologie à mettre en avant par le candidat (ex: développement web et informatique)",
-  "field6": "Nom de l''entreprise",
-  "field7": "Intitulé exact du poste"
-}
-
-Règles importantes :
-- Pour field1 : identifie le SECTEUR d''activité principal
-- Pour field2 : liste les MISSIONS ou PROJETS concrets
-- Pour field3 : extrais les COMPÉTENCES TECHNIQUES demandées
-- Pour field4 : identifie les TECHNOLOGIES ou TYPES DE PROJETS de l''entreprise
-- Pour field5 : suggère des projets pertinents que le candidat pourrait mettre en avant
-- Réponds UNIQUEMENT avec le JSON, sans texte supplémentaire',
-  true
-);
-
--- Insérer les templates par défaut
-INSERT INTO letter_templates (user_id, name, content, is_default)
-VALUES
-(null, 'Modèle Standard (Alternance)', '<ton_html_template_1>', true),
-(null, 'Modèle 2', '<ton_html_template_2>', true),
-(null, 'Modèle 3', '<ton_html_template_3>', true),
-(null, 'Modèle 4', '<ton_html_template_4>', true);
-```
-
-4. Remplacer <ton_html_template_X> par tes vrais templates HTML
-5. Exécuter la requête
 
 
 
 ================================================================================
-🔐 PHASE 3 : AUTHENTIFICATION (2-3 heures)
+1. PRESENTATION DU PROJET
 ================================================================================
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 3.1 : Activer l'authentification par email dans Supabase         │
-└─────────────────────────────────────────────────────────────────────────┘
+OBJECTIF GENERAL :
+------------------
+Creer un portfolio personnel professionnel accompagne d'un generateur de
+lettres de motivation assiste par intelligence artificielle.
 
-1. Dans Supabase, aller dans "Authentication" > "Providers"
-2. Vérifier que "Email" est activé
-3. Dans "URL Configuration", configurer :
-   - Site URL : ton URL de production (ou http://localhost:8000 pour dev)
-   - Redirect URLs : ajouter les URLs autorisées
+FONCTIONNALITES PRINCIPALES :
+-----------------------------
 
+    Portfolio (page principale) :
+        - Presentation personnelle et coordonnees
+        - Galerie de projets realises (videos, images, descriptions)
+        - Liste des competences techniques
+        - Liens vers les reseaux professionnels
+        - CV telechargeable
+        - Formulaire de contact
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 3.2 : Créer le fichier supabase-client.js                        │
-└─────────────────────────────────────────────────────────────────────────┘
+    Generateur de lettres de motivation :
+        - Coller une offre d'emploi
+        - Analyse automatique par IA pour extraire les informations cles
+        - Remplissage automatique des champs de la lettre
+        - Plusieurs modeles de lettres disponibles
+        - Personnalisation du texte en temps reel
+        - Export en PDF professionnel
+        - Sauvegarde des prompts et modeles personnalises (avec compte)
 
-Créer le fichier : js/supabase-client.js
+PUBLIC CIBLE :
+--------------
+    - Recruteurs et entreprises
+    - Utilisateurs souhaitant generer des lettres de motivation rapidement
 
-```javascript
-// Configuration du client Supabase
-const SUPABASE_URL = 'TON_URL_SUPABASE';
-const SUPABASE_ANON_KEY = 'TA_CLE_ANON_SUPABASE';
+================================================================================
 
-// Créer le client Supabase
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// Exporter pour utilisation dans d'autres fichiers
-window.supabaseClient = supabase;
-```
-
-⚠️ REMPLACER les valeurs par tes vraies clés Supabase !
-
-
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 3.3 : Créer le fichier auth.js                                   │
-└─────────────────────────────────────────────────────────────────────────┘
-
-Créer le fichier : js/auth.js
-
-```javascript
-// Gestion de l'authentification
-
-// Inscription
-async function signUp(email, password) {
-    const { data, error } = await supabaseClient.auth.signUp({
-        email: email,
-        password: password,
-    });
-    
-    if (error) {
-        console.error('Erreur inscription:', error.message);
-        return { success: false, error: error.message };
-    }
-    
-    return { success: true, data };
-}
-
-// Connexion
-async function signIn(email, password) {
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email: email,
-        password: password,
-    });
-    
-    if (error) {
-        console.error('Erreur connexion:', error.message);
-        return { success: false, error: error.message };
-    }
-    
-    return { success: true, data };
-}
-
-// Déconnexion
-async function signOut() {
-    const { error } = await supabaseClient.auth.signOut();
-    
-    if (error) {
-        console.error('Erreur déconnexion:', error.message);
-    }
-    
-    window.location.reload();
-}
-
-// Vérifier si l'utilisateur est connecté
-async function checkAuth() {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    return session;
-}
-
-// Écouter les changements d'authentification
-supabaseClient.auth.onAuthStateChange((event, session) => {
-    console.log('Auth event:', event);
-    updateUIBasedOnAuth(session);
-});
-
-// Mettre à jour l'interface selon l'état de connexion
-function updateUIBasedOnAuth(session) {
-    const authSection = document.getElementById('authSection');
-    const userSection = document.getElementById('userSection');
-    
-    if (session) {
-        // Utilisateur connecté
-        authSection.style.display = 'none';
-        userSection.style.display = 'block';
-        document.getElementById('userEmail').textContent = session.user.email;
-    } else {
-        // Utilisateur non connecté
-        authSection.style.display = 'block';
-        userSection.style.display = 'none';
-    }
-}
-```
-
-
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 3.4 : Ajouter l'interface d'authentification dans le HTML        │
-└─────────────────────────────────────────────────────────────────────────┘
-
-Ajouter ce code dans lettre-motivation.html (avant le container) :
-
-```html
-<!-- Section Authentification -->
-<div id="authSection" style="padding: 20px; background: #f0f0f0;">
-    <h3>Connexion / Inscription</h3>
-    <div style="display: flex; gap: 20px;">
-        <div>
-            <h4>Se connecter</h4>
-            <input type="email" id="loginEmail" placeholder="Email">
-            <input type="password" id="loginPassword" placeholder="Mot de passe">
-            <button onclick="handleSignIn()">Connexion</button>
-        </div>
-        <div>
-            <h4>S'inscrire</h4>
-            <input type="email" id="signupEmail" placeholder="Email">
-            <input type="password" id="signupPassword" placeholder="Mot de passe">
-            <button onclick="handleSignUp()">Inscription</button>
-        </div>
-    </div>
-</div>
-
-<!-- Section Utilisateur connecté -->
-<div id="userSection" style="display: none; padding: 20px; background: #e8f5e9;">
-    <p>Connecté en tant que : <span id="userEmail"></span></p>
-    <button onclick="signOut()">Déconnexion</button>
-</div>
-
-<script>
-async function handleSignIn() {
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    const result = await signIn(email, password);
-    if (result.success) {
-        alert('Connexion réussie !');
-    } else {
-        alert('Erreur : ' + result.error);
-    }
-}
-
-async function handleSignUp() {
-    const email = document.getElementById('signupEmail').value;
-    const password = document.getElementById('signupPassword').value;
-    const result = await signUp(email, password);
-    if (result.success) {
-        alert('Inscription réussie ! Vérifiez votre email.');
-    } else {
-        alert('Erreur : ' + result.error);
-    }
-}
-</script>
-```
-
-
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 3.5 : Charger les librairies nécessaires                         │
-└─────────────────────────────────────────────────────────────────────────┘
-
-Ajouter AVANT la balise </head> dans lettre-motivation.html :
-
-```html
-<!-- Supabase JS Client -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<!-- Tes fichiers JS -->
-<script src="js/supabase-client.js"></script>
-<script src="js/auth.js"></script>
-```
 
 
 
 ================================================================================
-⚙️ PHASE 4 : GESTION DES PROMPTS ET TEMPLATES (3-4 heures)
+2. TECHNOLOGIES UTILISEES
 ================================================================================
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 4.1 : Créer le fichier prompts.js                                │
-└─────────────────────────────────────────────────────────────────────────┘
 
-Créer le fichier : js/prompts.js
+--------------------------------------------------------------------------------
+2.1 TAILWIND CSS - Framework CSS utilitaire
+--------------------------------------------------------------------------------
 
-```javascript
-// Gestion des prompts personnalisés
+    QU'EST-CE QUE C'EST ?
+    Tailwind est un framework CSS qui fonctionne avec des classes utilitaires.
+    Au lieu d'ecrire du CSS personnalise, on utilise des classes predefinies
+    directement dans le HTML.
 
-// Charger tous les prompts (défaut + utilisateur)
-async function loadPrompts() {
-    const session = await checkAuth();
-    
-    // Charger les prompts par défaut
-    let { data: defaultPrompts } = await supabaseClient
-        .from('prompts')
-        .select('*')
-        .eq('is_default', true);
-    
-    // Charger les prompts de l'utilisateur si connecté
-    let userPrompts = [];
-    if (session) {
-        const result = await supabaseClient
-            .from('prompts')
-            .select('*')
-            .eq('user_id', session.user.id);
-        userPrompts = result.data || [];
-    }
-    
-    return [...defaultPrompts, ...userPrompts];
-}
+    EXEMPLE SIMPLE :
+    Au lieu d'ecrire :
+        .mon-bouton { background-color: blue; padding: 10px; border-radius: 5px; }
 
-// Sauvegarder un nouveau prompt
-async function savePrompt(name, content) {
-    const session = await checkAuth();
-    
-    if (!session) {
-        alert('Vous devez être connecté pour sauvegarder un prompt');
-        return { success: false };
-    }
-    
-    const { data, error } = await supabaseClient
-        .from('prompts')
-        .insert({
-            user_id: session.user.id,
-            name: name,
-            content: content,
-            is_default: false
-        })
-        .select();
-    
-    if (error) {
-        console.error('Erreur sauvegarde prompt:', error);
-        return { success: false, error };
-    }
-    
-    return { success: true, data };
-}
+    On ecrit directement dans le HTML :
+        class="bg-blue-500 p-4 rounded"
 
-// Modifier un prompt existant
-async function updatePrompt(promptId, name, content) {
-    const { data, error } = await supabaseClient
-        .from('prompts')
-        .update({ name, content, updated_at: new Date() })
-        .eq('id', promptId)
-        .select();
-    
-    if (error) {
-        console.error('Erreur modification prompt:', error);
-        return { success: false, error };
-    }
-    
-    return { success: true, data };
-}
+    AVANTAGES :
+        - Developpement plus rapide
+        - Pas besoin de nommer des classes CSS
+        - Design coherent automatiquement
+        - Fichier CSS final optimise (uniquement ce qui est utilise)
 
-// Supprimer un prompt
-async function deletePrompt(promptId) {
-    const { error } = await supabaseClient
-        .from('prompts')
-        .delete()
-        .eq('id', promptId);
-    
-    if (error) {
-        console.error('Erreur suppression prompt:', error);
-        return { success: false, error };
-    }
-    
-    return { success: true };
-}
-
-// Charger les prompts dans le select
-async function populatePromptSelect() {
-    const prompts = await loadPrompts();
-    const select = document.getElementById('promptSelect');
-    
-    select.innerHTML = '';
-    
-    prompts.forEach(prompt => {
-        const option = document.createElement('option');
-        option.value = prompt.id;
-        option.textContent = prompt.name + (prompt.is_default ? ' (Défaut)' : '');
-        select.appendChild(option);
-    });
-    
-    // Charger le contenu du prompt sélectionné
-    if (prompts.length > 0) {
-        loadPromptContent(prompts[0].id);
-    }
-}
-
-// Charger le contenu d'un prompt spécifique
-async function loadPromptContent(promptId) {
-    const { data } = await supabaseClient
-        .from('prompts')
-        .select('content')
-        .eq('id', promptId)
-        .single();
-    
-    if (data) {
-        document.getElementById('aiPrompt').value = data.content;
-    }
-}
-```
+    PREREQUIS :
+        - Node.js installe sur l'ordinateur
+        - Initialisation via npm (gestionnaire de paquets)
 
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 4.2 : Créer le fichier templates.js                              │
-└─────────────────────────────────────────────────────────────────────────┘
+--------------------------------------------------------------------------------
+2.2 SUPABASE - Backend as a Service
+--------------------------------------------------------------------------------
 
-Créer le fichier : js/templates.js
+    QU'EST-CE QUE C'EST ?
+    Supabase est une plateforme qui fournit tout le backend d'une application
+    sans avoir a coder un serveur. C'est une alternative open-source a Firebase.
 
-```javascript
-// Gestion des templates de lettres
+    CE QUE SUPABASE FOURNIT :
 
-// Charger tous les templates
-async function loadTemplates() {
-    const session = await checkAuth();
-    
-    // Charger les templates par défaut
-    let { data: defaultTemplates } = await supabaseClient
-        .from('letter_templates')
-        .select('*')
-        .eq('is_default', true);
-    
-    // Charger les templates de l'utilisateur si connecté
-    let userTemplates = [];
-    if (session) {
-        const result = await supabaseClient
-            .from('letter_templates')
-            .select('*')
-            .eq('user_id', session.user.id);
-        userTemplates = result.data || [];
-    }
-    
-    return [...defaultTemplates, ...userTemplates];
-}
+        1. Base de donnees PostgreSQL
+           - Stocker les donnees (prompts, templates, historique)
+           - Interface visuelle pour gerer les tables
+           - Requetes SQL ou API automatique
 
-// Sauvegarder un nouveau template
-async function saveTemplate(name, content) {
-    const session = await checkAuth();
-    
-    if (!session) {
-        alert('Vous devez être connecté pour sauvegarder un template');
-        return { success: false };
-    }
-    
-    const { data, error } = await supabaseClient
-        .from('letter_templates')
-        .insert({
-            user_id: session.user.id,
-            name: name,
-            content: content,
-            is_default: false
-        })
-        .select();
-    
-    if (error) {
-        console.error('Erreur sauvegarde template:', error);
-        return { success: false, error };
-    }
-    
-    return { success: true, data };
-}
+        2. Authentification
+           - Systeme de connexion/inscription pret a l'emploi
+           - Gestion des sessions utilisateur
+           - Connexion par email, Google, GitHub, etc.
 
-// Charger les templates dans le select
-async function populateTemplateSelect() {
-    const templates = await loadTemplates();
-    const select = document.getElementById('templateSelect');
-    
-    select.innerHTML = '';
-    
-    templates.forEach(template => {
-        const option = document.createElement('option');
-        option.value = template.id;
-        option.textContent = template.name + (template.is_default ? ' (Défaut)' : '');
-        select.appendChild(option);
-    });
-}
+        3. Edge Functions
+           - Code execute cote serveur (pas dans le navigateur)
+           - Permet de proteger les cles API sensibles
+           - Ecrit en TypeScript/JavaScript
 
-// Charger le contenu d'un template spécifique
-async function loadTemplateContent(templateId) {
-    const { data } = await supabaseClient
-        .from('letter_templates')
-        .select('content')
-        .eq('id', templateId)
-        .single();
-    
-    if (data) {
-        document.getElementById('editableBody').innerHTML = data.content;
-        updateAllPreviews();
-    }
-}
-```
+        4. Stockage de fichiers
+           - Heberger des images, PDF, etc.
+           - Gestion des permissions d'acces
+
+    POURQUOI L'UTILISER DANS CE PROJET ?
+        - Stocker les prompts personnalises des utilisateurs
+        - Stocker les modeles de lettres personnalises
+        - Gerer les comptes utilisateurs
+        - Proteger la cle API des services IA (jamais exposee au navigateur)
+        - Garder un historique des lettres generees
+
+    COUT :
+        - Gratuit : 500 MB base de donnees, 1 GB stockage, 500K Edge Functions/mois
+        - Largement suffisant pour ce projet
+
+    SITE : https://supabase.com
 
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 4.3 : Modifier le HTML pour intégrer les selects                 │
-└─────────────────────────────────────────────────────────────────────────┘
+--------------------------------------------------------------------------------
+2.3 APIs D'INTELLIGENCE ARTIFICIELLE
+--------------------------------------------------------------------------------
 
-Remplacer dans lettre-motivation.html :
+    POURQUOI UTILISER PLUSIEURS APIs ?
 
-AVANT :
-```html
-<select id="templateSelect">
-    <option value="default">Modèle Standard (Alternance)</option>
-    <option value="2">Modèle 2</option>
-    ...
-</select>
-```
+    Chaque API a ses avantages et limites. En avoir plusieurs permet :
+        - Plus de requetes gratuites pour les tests
+        - Une solution de secours si une API est indisponible
+        - Comparer la qualite des reponses
 
-APRÈS :
-```html
-<select id="templateSelect" onchange="handleTemplateChange()">
-    <!-- Sera rempli dynamiquement -->
-</select>
-<button onclick="showSaveTemplateDialog()">Sauvegarder ce template</button>
-```
+    +---------------------------------------------------------------------------+
+    |                         COMPARATIF DES APIs                               |
+    +-----------------+--------------------------+------------------------------+
+    |                 | CLAUDE (Anthropic)       | GEMINI (Google)              |
+    +-----------------+--------------------------+------------------------------+
+    | Cout            | ~3$/million tokens       | Gratuit (quota genereux)     |
+    | Qualite         | Excellente               | Tres bonne                   |
+    | Inscription     | Carte bancaire requise   | Compte Google suffit         |
+    | Limite gratuite | Credits initiaux limites | 60 requetes/minute           |
+    | Ideal pour      | Production finale        | Developpement et tests       |
+    +-----------------+--------------------------+------------------------------+
 
-Pareil pour les prompts, ajouter :
-```html
-<select id="promptSelect" onchange="handlePromptChange()">
-    <!-- Sera rempli dynamiquement -->
-</select>
-<button onclick="showSavePromptDialog()">Sauvegarder ce prompt</button>
-```
+    STRATEGIE RECOMMANDEE :
+        1. Pendant le developpement : Utiliser Gemini (gratuit, pas de CB)
+        2. Pour les tests finaux : Tester avec Claude
+        3. En production : Proposer le choix a l'utilisateur ou utiliser Claude
+
+    APIs SUPPLEMENTAIRES POSSIBLES (toutes gratuites avec limites) :
+        - Mistral AI : API francaise, bonne qualite
+        - Groq : Tres rapide, modeles open-source
+        - OpenRouter : Acces a plusieurs modeles via une seule API
 
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 4.4 : Ajouter les fonctions de gestion                           │
-└─────────────────────────────────────────────────────────────────────────┘
+--------------------------------------------------------------------------------
+2.4 jsPDF - Generation de PDF
+--------------------------------------------------------------------------------
 
-Ajouter dans le <script> de lettre-motivation.html :
+    QU'EST-CE QUE C'EST ?
+    Librairie JavaScript permettant de generer des fichiers PDF directement
+    dans le navigateur, sans serveur.
 
-```javascript
-async function handleTemplateChange() {
-    const select = document.getElementById('templateSelect');
-    await loadTemplateContent(select.value);
-}
+    UTILISATION DANS LE PROJET :
+        - Convertir la lettre de motivation en PDF telechargeable
+        - Mise en page professionnelle avec sidebar coloree
+        - Texte dynamique selon les champs remplis
 
-async function handlePromptChange() {
-    const select = document.getElementById('promptSelect');
-    await loadPromptContent(select.value);
-}
+    SITE : https://github.com/parallax/jsPDF
 
-function showSaveTemplateDialog() {
-    const name = prompt('Nom de votre template :');
-    if (name) {
-        const content = document.getElementById('editableBody').innerHTML;
-        saveTemplate(name, content).then(result => {
-            if (result.success) {
-                alert('Template sauvegardé !');
-                populateTemplateSelect();
-            }
-        });
-    }
-}
 
-function showSavePromptDialog() {
-    const name = prompt('Nom de votre prompt :');
-    if (name) {
-        const content = document.getElementById('aiPrompt').value;
-        savePrompt(name, content).then(result => {
-            if (result.success) {
-                alert('Prompt sauvegardé !');
-                populatePromptSelect();
-            }
-        });
-    }
-}
+================================================================================
 
-// Initialiser au chargement de la page
-document.addEventListener('DOMContentLoaded', async () => {
-    await populateTemplateSelect();
-    await populatePromptSelect();
-});
-```
 
 
 
 ================================================================================
-🤖 PHASE 5 : INTÉGRATION DE L'API CLAUDE (4-6 heures)
+3. ARCHITECTURE DU PROJET
 ================================================================================
 
-⚠️ IMPORTANT : L'API key Claude NE DOIT JAMAIS être exposée côté client !
-On va utiliser une Edge Function Supabase pour faire l'appel côté serveur.
+STRUCTURE DES FICHIERS :
+------------------------
+
+    T-ENT-500-LYN_TIMOTHEE-ITHIER/
+    |-- |-- _original/             Fichier à ne pas toucher
+    |   |   |-- lettre/
+    |   |   |   |-- lettre-generateur.css
+    |   |   |   |-- lettre-generateur.html               
+    |   |   |-- portolio/
+    |   |   |   |-- portfolio.css
+    |   |   |   |-- portfolio.html              
+    |   
+    |
+    |-- portfolio-v1.html                 Page principale du portfolio
+    |-- lettre-generateur-v1.html         Page du generateur de lettres
+    |
+    |-- css/
+    |   |-- input.css              Fichier source Tailwind
+    |   |-- output.css             CSS compile par Tailwind (auto-genere)
+    |
+    |-- js/
+    |   |-- supabase-client.js     Configuration de la connexion Supabase
+    |   |-- auth.js                Gestion de l'authentification
+    |   |-- prompts.js             Gestion des prompts personnalises
+    |   |-- templates.js           Gestion des modeles de lettres
+    |   |-- ai-generator.js        Logique d'appel aux APIs IA
+    |   |-- pdf-generator.js       Generation du PDF
+    |
+    |-- assets/
+    |   |-- images/                Images du portfolio
+    |   |-- videos/                Videos des projets
+    |   |-- documents/             CV et autres documents
+    |
+    |-- supabase/
+    |   |-- functions/
+    |       |-- generate-letter/   Edge Function pour appeler les APIs IA
+    |
+    |-- tailwind.config.js         Configuration de Tailwind
+    |-- package.json               Dependances du projet
+    |-- .env                       Variables d'environnement (NE PAS PARTAGER)
+    |-- .gitignore                 Fichiers a ignorer par Git
 
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 5.1 : Installer Supabase CLI                                     │
-└─────────────────────────────────────────────────────────────────────────┘
+SCHEMA DE FONCTIONNEMENT (Generateur de lettres) :
+--------------------------------------------------
 
-1. Installer Node.js si pas déjà fait (https://nodejs.org)
-
-2. Ouvrir un terminal et installer Supabase CLI :
-   
-   Windows (PowerShell) :
-   ```
-   npm install -g supabase
-   ```
-   
-   Mac/Linux :
-   ```
-   npm install -g supabase
-   ```
-
-3. Vérifier l'installation :
-   ```
-   supabase --version
-   ```
-
-
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 5.2 : Initialiser Supabase dans le projet                        │
-└─────────────────────────────────────────────────────────────────────────┘
-
-1. Dans le terminal, aller dans ton dossier projet :
-   ```
-   cd chemin/vers/portfolio-projet
-   ```
-
-2. Initialiser Supabase :
-   ```
-   supabase init
-   ```
-
-3. Se connecter à ton projet Supabase :
-   ```
-   supabase link --project-ref TON_PROJECT_REF
-   ```
-   
-   Le PROJECT_REF se trouve dans l'URL de ton projet Supabase :
-   https://[PROJECT_REF].supabase.co
+    +-------------+      +-------------+      +------------------+
+    | UTILISATEUR | ---> | NAVIGATEUR  | ---> | SUPABASE         |
+    | (Navigateur)|      | (Frontend)  |      | (Edge Function)  |
+    +-------------+      +-------------+      +------------------+
+          |                    |                      |
+          |  1. Colle offre    |                      |
+          |  d'emploi          |                      |
+          |------------------->|                      |
+          |                    |  2. Envoie offre     |
+          |                    |  + prompt            |
+          |                    |--------------------->|
+          |                    |                      |  3. Appelle API IA
+          |                    |                      |  (Claude ou Gemini)
+          |                    |                      |---------------+
+          |                    |                      |               |
+          |                    |                      |<--------------+
+          |                    |  4. Retourne JSON    |
+          |                    |  avec champs extraits|
+          |                    |<---------------------|
+          |  5. Affiche lettre |                      |
+          |  pre-remplie       |                      |
+          |<-------------------|                      |
+          |                    |                      |
+          |  6. Telecharge PDF |                      |
+          |<-------------------|                      |
 
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 5.3 : Créer l'Edge Function                                      │
-└─────────────────────────────────────────────────────────────────────────┘
+    POURQUOI PASSER PAR SUPABASE (Edge Function) ?
 
-1. Créer la fonction :
-   ```
-   supabase functions new generate-letter
-   ```
+    La cle API des services IA est SECRETE. Si on l'utilise directement
+    dans le navigateur, n'importe qui peut la voler en inspectant le code.
 
-2. Cela crée : supabase/functions/generate-letter/index.ts
-
-3. Remplacer le contenu par ce code :
-
-```typescript
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
-
-serve(async (req) => {
-  // Gestion des requêtes OPTIONS (CORS)
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
-  }
-
-  try {
-    // Récupérer les données de la requête
-    const { jobOffer, prompt } = await req.json();
-    
-    // Récupérer la clé API Claude depuis les secrets Supabase
-    const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY');
-    
-    if (!ANTHROPIC_API_KEY) {
-      throw new Error('API key non configurée');
-    }
-    
-    // Appeler l'API Claude
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: `${prompt}
-
-Voici l'offre d'emploi à analyser :
-
-${jobOffer}`
-        }]
-      })
-    });
-    
-    const data = await response.json();
-    
-    if (!response.ok) {
-      throw new Error(data.error?.message || 'Erreur API Claude');
-    }
-    
-    // Extraire le contenu de la réponse
-    const content = data.content[0].text;
-    
-    // Essayer de parser le JSON
-    let parsedData;
-    try {
-      // Nettoyer le texte (enlever les backticks si présents)
-      const cleanContent = content.replace(/```json|```/g, '').trim();
-      parsedData = JSON.parse(cleanContent);
-    } catch (e) {
-      console.error('Erreur parsing JSON:', e);
-      throw new Error('Le format de réponse de Claude n\'est pas valide');
-    }
-    
-    // Retourner les données
-    return new Response(
-      JSON.stringify({ success: true, data: parsedData }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200 
-      }
-    );
-    
-  } catch (error) {
-    console.error('Erreur:', error);
-    
-    return new Response(
-      JSON.stringify({ 
-        success: false, 
-        error: error.message 
-      }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 500 
-      }
-    );
-  }
-});
-```
+    L'Edge Function agit comme intermediaire :
+        - La cle API reste sur le serveur Supabase (securisee)
+        - Le navigateur envoie seulement l'offre d'emploi
+        - Supabase fait l'appel a l'API IA et renvoie le resultat
 
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 5.4 : Configurer le secret de l'API Claude                       │
-└─────────────────────────────────────────────────────────────────────────┘
+================================================================================
 
-1. Dans le terminal :
-   ```
-   supabase secrets set ANTHROPIC_API_KEY=sk-ant-api03-VOTRE_CLE_ICI
-   ```
-   
-   ⚠️ Remplacer par ta vraie clé API Claude !
-
-
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 5.5 : Déployer l'Edge Function                                   │
-└─────────────────────────────────────────────────────────────────────────┘
-
-1. Déployer la fonction :
-   ```
-   supabase functions deploy generate-letter
-   ```
-
-2. Noter l'URL retournée :
-   https://[PROJECT_REF].supabase.co/functions/v1/generate-letter
-
-
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 5.6 : Créer le fichier letter-generator.js                       │
-└─────────────────────────────────────────────────────────────────────────┘
-
-Créer le fichier : js/letter-generator.js
-
-```javascript
-// Appeler l'Edge Function pour générer la lettre
-
-async function generateLetter() {
-    // Récupérer les valeurs
-    const jobOffer = document.getElementById('jobOffer').value;
-    const prompt = document.getElementById('aiPrompt').value;
-    
-    if (!jobOffer) {
-        alert('Veuillez coller une offre d\'emploi');
-        return;
-    }
-    
-    // Afficher le loading
-    document.getElementById('loadingMessage').style.display = 'block';
-    document.getElementById('errorMessage').style.display = 'none';
-    document.getElementById('generateBtn').disabled = true;
-    
-    try {
-        // Appeler l'Edge Function
-        const { data, error } = await supabaseClient.functions.invoke('generate-letter', {
-            body: { 
-                jobOffer: jobOffer,
-                prompt: prompt
-            }
-        });
-        
-        if (error) throw error;
-        
-        if (data.success) {
-            // Remplir les champs avec les données extraites
-            const extractedData = data.data;
-            
-            document.getElementById('field1').value = extractedData.field1 || '';
-            document.getElementById('field2').value = extractedData.field2 || '';
-            document.getElementById('field3').value = extractedData.field3 || '';
-            document.getElementById('field4').value = extractedData.field4 || '';
-            document.getElementById('field5').value = extractedData.field5 || '';
-            document.getElementById('field6').value = extractedData.field6 || '';
-            document.getElementById('field7').value = extractedData.field7 || '';
-            
-            // Mettre à jour l'aperçu
-            updateAllPreviews();
-            
-            // Message de succès
-            alert('Champs remplis automatiquement avec succès !');
-        } else {
-            throw new Error(data.error || 'Erreur inconnue');
-        }
-        
-    } catch (error) {
-        console.error('Erreur:', error);
-        document.getElementById('errorMessage').textContent = 
-            '❌ Erreur : ' + error.message;
-        document.getElementById('errorMessage').style.display = 'block';
-    } finally {
-        document.getElementById('loadingMessage').style.display = 'none';
-        document.getElementById('generateBtn').disabled = false;
-    }
-}
-```
-
-
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 5.7 : Ajouter le script dans le HTML                             │
-└─────────────────────────────────────────────────────────────────────────┘
-
-Ajouter avant </head> dans lettre-motivation.html :
-
-```html
-<script src="js/letter-generator.js"></script>
-```
-
-Et modifier le bouton existant :
-
-```html
-<button type="button" id="generateBtn" onclick="generateLetter()" class="generate-btn">
-    Remplir Automatiquement avec l'IA
-</button>
-```
 
 
 
 ================================================================================
-🧪 PHASE 6 : TESTS ET DEBUG (2-3 heures)
+4. PHASE 1 : CONFIGURATION INITIALE
 ================================================================================
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 6.1 : Tester localement                                          │
-└─────────────────────────────────────────────────────────────────────────┘
+OBJECTIF : Preparer l'environnement de developpement
 
-1. Lancer un serveur local :
-   
-   Option 1 - Python :
-   ```
-   python -m http.server 8000
-   ```
-   
-   Option 2 - Node.js (si http-server installé) :
-   ```
-   npx http-server -p 8000
-   ```
-   
-   Option 3 - VS Code : installer l'extension "Live Server"
+--------------------------------------------------------------------------------
+ETAPE 1.1 : Installer Node.js
+--------------------------------------------------------------------------------
 
-2. Ouvrir http://localhost:8000/lettre-motivation.html
+    Node.js est necessaire pour :
+        - Utiliser Tailwind CSS
+        - Gerer les dependances du projet
+        - Lancer des scripts de developpement
 
-3. Tester dans l'ordre :
-   ✓ Inscription / Connexion
-   ✓ Chargement des prompts par défaut
-   ✓ Chargement des templates par défaut
-   ✓ Génération avec l'IA (coller une vraie offre d'emploi)
-   ✓ Sauvegarde d'un prompt personnalisé
-   ✓ Sauvegarde d'un template personnalisé
-   ✓ Génération PDF
+    ACTIONS :
+        1. Telecharger Node.js sur https://nodejs.org (version LTS)
+        2. Installer en suivant les instructions
+        3. Verifier l'installation en ouvrant un terminal :
+           Taper "node --version" et "npm --version"
+           Les deux doivent afficher un numero de version
 
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 6.2 : Débugger les erreurs courantes                             │
-└─────────────────────────────────────────────────────────────────────────┘
+--------------------------------------------------------------------------------
+ETAPE 1.2 : Initialiser le projet npm
+--------------------------------------------------------------------------------
 
-ERREUR : "Supabase is not defined"
-└─> Vérifier que le script Supabase est bien chargé en premier
-
-ERREUR : "CORS policy error"
-└─> Vérifier les corsHeaders dans l'Edge Function
-└─> Vérifier les Redirect URLs dans Supabase Auth
-
-ERREUR : "API key non configurée"
-└─> Vérifier que le secret est bien défini : supabase secrets list
-
-ERREUR : "Invalid JSON response"
-└─> Claude peut renvoyer du texte avant/après le JSON
-└─> Le code de nettoyage dans l'Edge Function doit gérer ça
-
-ERREUR : "Permission denied" sur les tables
-└─> Vérifier les politiques RLS
-└─> Vérifier que l'utilisateur est bien connecté
+    ACTIONS :
+        1. Ouvrir un terminal dans le dossier du projet
+        2. Initialiser npm (cree le fichier package.json)
+        3. Ce fichier contiendra la liste des dependances
 
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 6.3 : Consulter les logs                                         │
-└─────────────────────────────────────────────────────────────────────────┘
+--------------------------------------------------------------------------------
+ETAPE 1.3 : Installer Tailwind CSS
+--------------------------------------------------------------------------------
 
-1. Logs de l'Edge Function :
-   ```
-   supabase functions logs generate-letter
-   ```
+    ACTIONS :
+        1. Installer Tailwind via npm
+        2. Creer le fichier de configuration Tailwind
+        3. Creer le fichier CSS source avec les directives Tailwind
+        4. Configurer le script de compilation dans package.json
 
-2. Dans le navigateur : F12 > Console
 
-3. Dans Supabase Dashboard : "Edge Functions" > "Logs"
+--------------------------------------------------------------------------------
+ETAPE 1.4 : Creer les comptes necessaires
+--------------------------------------------------------------------------------
 
+    COMPTE SUPABASE :
+        1. Aller sur https://supabase.com
+        2. Creer un compte gratuit (avec GitHub ou email)
+        3. Creer un nouveau projet
+        4. Noter le "Project URL" et la "anon public key"
+           (Dans Settings > API)
+
+    COMPTE GOOGLE CLOUD (pour Gemini) :
+        1. Aller sur https://aistudio.google.com
+        2. Se connecter avec un compte Google
+        3. Creer une cle API dans "Get API Key"
+        4. Noter la cle API
+
+    COMPTE ANTHROPIC (pour Claude) - Optionnel au debut :
+        1. Aller sur https://console.anthropic.com
+        2. Creer un compte (carte bancaire requise)
+        3. Creer une cle API
+        4. Noter la cle API
+
+
+--------------------------------------------------------------------------------
+ETAPE 1.5 : Configurer les variables d'environnement
+--------------------------------------------------------------------------------
+
+    Creer un fichier ".env" a la racine du projet.
+    Ce fichier contient les informations sensibles et NE DOIT JAMAIS
+    etre partage ou pousse sur GitHub.
+
+    CONTENU DU FICHIER .env :
+        - URL du projet Supabase
+        - Cle publique Supabase
+        - Cle API Gemini
+        - Cle API Claude (si disponible)
+
+    IMPORTANT : Ajouter ".env" dans le fichier .gitignore
 
 
 ================================================================================
-🚀 PHASE 7 : DÉPLOIEMENT (1-2 heures)
-================================================================================
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 7.1 : Préparer les fichiers pour la production                   │
-└─────────────────────────────────────────────────────────────────────────┘
-
-1. Vérifier que les clés API sont bien dans les fichiers .js (pas en dur)
-
-2. Minifier les fichiers JS/CSS si besoin (optionnel)
-
-3. Tester une dernière fois en local
-
-
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 7.2 : Déployer sur un hébergeur                                  │
-└─────────────────────────────────────────────────────────────────────────┘
-
-OPTIONS D'HÉBERGEMENT GRATUITES :
-
-Option A - GitHub Pages (recommandé) :
-──────────────────────────────────────
-1. Créer un repo GitHub
-2. Pusher les fichiers (sauf node_modules, .env)
-3. Settings > Pages > Source: main branch
-4. L'URL sera : https://username.github.io/repo-name
-
-Option B - Netlify :
-────────────────────
-1. Créer un compte sur netlify.com
-2. Drag & drop ton dossier
-3. Site déployé automatiquement
-
-Option C - Vercel :
-───────────────────
-1. Créer un compte sur vercel.com
-2. Importer depuis GitHub
-3. Deploy automatique
-
-
-┌─────────────────────────────────────────────────────────────────────────┐
-│ ÉTAPE 7.3 : Configurer les URLs de redirection                         │
-└─────────────────────────────────────────────────────────────────────────┘
-
-1. Dans Supabase > Authentication > URL Configuration
-
-2. Ajouter ton URL de production dans "Redirect URLs" :
-   https://ton-site.github.io/*
 
 
 
 ================================================================================
-📚 PHASE 8 : AMÉLIORATIONS FUTURES (optionnel)
+5. PHASE 2 : MIGRATION VERS TAILWIND CSS
 ================================================================================
 
-┌─────────────────────────────────────────────────────────────────────────┐
-│ Idées d'améliorations                                                  │
-└─────────────────────────────────────────────────────────────────────────┘
+OBJECTIF : Remplacer le CSS actuel par des classes Tailwind
+           SANS modifier la structure HTML ni le design visuel
 
-□ Interface de gestion des prompts/templates plus avancée
-  └─> Édition inline, prévisualisation, duplication
+--------------------------------------------------------------------------------
+ETAPE 2.1 : Comprendre la correspondance CSS -> Tailwind
+--------------------------------------------------------------------------------
 
-□ Historique des lettres générées
-  └─> Pouvoir retrouver et réutiliser les anciennes lettres
+    CORRESPONDANCES COURANTES :
 
-□ Export en DOCX (en plus du PDF)
-  └─> Utiliser une librairie comme docx.js
+    +---------------------------+---------------------------+
+    | CSS Classique             | Tailwind                  |
+    +---------------------------+---------------------------+
+    | display: flex             | flex                      |
+    | justify-content: center   | justify-center            |
+    | align-items: center       | items-center              |
+    | padding: 20px             | p-5                       |
+    | margin: 10px              | m-2.5                     |
+    | background-color: #333    | bg-neutral-700            |
+    | color: white              | text-white                |
+    | font-size: 24px           | text-2xl                  |
+    | font-weight: bold         | font-bold                 |
+    | border-radius: 10px       | rounded-lg                |
+    | width: 100%               | w-full                    |
+    | max-width: 1200px         | max-w-7xl                 |
+    +---------------------------+---------------------------+
 
-□ Système de tags/catégories pour organiser prompts et templates
+    DOCUMENTATION COMPLETE : https://tailwindcss.com/docs
 
-□ Partage de templates entre utilisateurs (communauté)
 
-□ Dark mode
+--------------------------------------------------------------------------------
+ETAPE 2.2 : Strategie de migration
+--------------------------------------------------------------------------------
 
-□ Mode mobile optimisé
+    APPROCHE RECOMMANDEE (par etapes) :
 
-□ Analytics : nombre de lettres générées, taux de succès, etc.
+        1. Garder l'ancien CSS en parallele au debut
+        2. Migrer section par section :
+           - Header / Navigation
+           - Section Hero
+           - Section Projets
+           - Section Competences
+           - Section Reseaux
+           - Footer / Contact
+        3. Tester chaque section apres migration
+        4. Supprimer l'ancien CSS une fois termine
 
-□ Intégration avec des sites d'emploi (LinkedIn, Indeed)
-  └─> Scraper automatiquement l'offre depuis l'URL
 
-□ Suggestions de phrases selon le secteur
+--------------------------------------------------------------------------------
+ETAPE 2.3 : Elements a migrer - Page Portfolio
+--------------------------------------------------------------------------------
+
+    SECTIONS A TRAITER :
+
+        [ ] En-tete (header)
+            - Logo/Photo de profil
+            - Nom
+            - Menu de navigation
+
+        [ ] Section Hero
+            - Carte de contact
+            - Nom et description
+
+        [ ] Section Projets
+            - Cartes de projet (video, description, competences)
+            - Grille responsive
+
+        [ ] Section Competences
+            - Grille de cartes par categorie
+            - Logos des technologies
+
+        [ ] Section Reseaux
+            - Boutons liens
+
+        [ ] Section CV
+            - Boutons voir/telecharger
+
+        [ ] Footer Contact
+            - Formulaire de contact
+
+
+--------------------------------------------------------------------------------
+ETAPE 2.4 : Elements a migrer - Page Generateur de lettres
+--------------------------------------------------------------------------------
+
+    SECTIONS A TRAITER :
+
+        [ ] Layout 3 colonnes
+            - Section offre (gauche)
+            - Section editeur (centre)
+            - Section apercu (droite)
+
+        [ ] Formulaires
+            - Champs de saisie
+            - Boutons
+            - Select/Dropdown
+
+        [ ] Apercu lettre
+            - Sidebar coloree
+            - Zone de texte editable
+
+        [ ] Elements interactifs
+            - Boutons de taille de police
+            - Messages de chargement/erreur
+
+
+--------------------------------------------------------------------------------
+ETAPE 2.5 : Configuration des couleurs personnalisees
+--------------------------------------------------------------------------------
+
+    Le projet utilise une palette de couleurs specifique (vert fonce).
+    Il faudra configurer ces couleurs dans tailwind.config.js pour
+    pouvoir les reutiliser facilement.
+
+    COULEURS A DEFINIR :
+        - Vert principal : #296b3f (ou similaire)
+        - Vert secondaire : #2c7348
+        - Couleurs de texte
+        - Couleurs de fond
+
+
+================================================================================
+
 
 
 
 ================================================================================
-🔧 RESSOURCES ET DOCUMENTATION
+6. PHASE 3 : BASE DE DONNEES (SUPABASE)
 ================================================================================
 
-📖 Documentation officielle :
+OBJECTIF : Creer les tables pour stocker les donnees utilisateur
 
-Supabase         : https://supabase.com/docs
-Supabase Auth    : https://supabase.com/docs/guides/auth
-Edge Functions   : https://supabase.com/docs/guides/functions
-Anthropic API    : https://docs.anthropic.com/claude/reference
-jsPDF            : https://github.com/parallax/jsPDF
+--------------------------------------------------------------------------------
+ETAPE 3.1 : Creer la table "prompts"
+--------------------------------------------------------------------------------
+
+    DESCRIPTION :
+    Stocke les prompts personnalises pour l'analyse des offres d'emploi.
+
+    COLONNES :
+    +-------------+------------+------------------------------------------+
+    | Nom         | Type       | Description                              |
+    +-------------+------------+------------------------------------------+
+    | id          | uuid       | Identifiant unique (auto-genere)         |
+    | user_id     | uuid       | ID de l'utilisateur proprietaire         |
+    | name        | text       | Nom du prompt (ex: "Prompt Tech")        |
+    | content     | text       | Contenu du prompt                        |
+    | is_default  | boolean    | Est-ce un prompt par defaut du systeme ? |
+    | created_at  | timestamp  | Date de creation                         |
+    | updated_at  | timestamp  | Date de derniere modification            |
+    +-------------+------------+------------------------------------------+
 
 
-🎓 Tutoriels utiles :
+--------------------------------------------------------------------------------
+ETAPE 3.2 : Creer la table "letter_templates"
+--------------------------------------------------------------------------------
 
-Supabase Crash Course    : https://www.youtube.com/watch?v=7uKQBl9uZ00
-Edge Functions Tutorial  : https://www.youtube.com/watch?v=rzglqRdZUQE
+    DESCRIPTION :
+    Stocke les modeles de lettres de motivation.
+
+    COLONNES :
+    +-------------+------------+------------------------------------------+
+    | Nom         | Type       | Description                              |
+    +-------------+------------+------------------------------------------+
+    | id          | uuid       | Identifiant unique (auto-genere)         |
+    | user_id     | uuid       | ID de l'utilisateur proprietaire         |
+    | name        | text       | Nom du modele (ex: "Modele Startup")     |
+    | content     | text       | Contenu HTML du modele                   |
+    | is_default  | boolean    | Est-ce un modele par defaut du systeme ? |
+    | created_at  | timestamp  | Date de creation                         |
+    | updated_at  | timestamp  | Date de derniere modification            |
+    +-------------+------------+------------------------------------------+
 
 
-💬 Communautés d'aide :
+--------------------------------------------------------------------------------
+ETAPE 3.3 : Creer la table "generated_letters" (optionnel)
+--------------------------------------------------------------------------------
 
-Supabase Discord  : https://discord.supabase.com
-Stack Overflow    : Tagger "supabase" et "anthropic-claude"
+    DESCRIPTION :
+    Historique des lettres generees pour pouvoir les retrouver.
+
+    COLONNES :
+    +---------------+------------+----------------------------------------+
+    | Nom           | Type       | Description                            |
+    +---------------+------------+----------------------------------------+
+    | id            | uuid       | Identifiant unique                     |
+    | user_id       | uuid       | ID de l'utilisateur                    |
+    | company_name  | text       | Nom de l'entreprise                    |
+    | job_title     | text       | Intitule du poste                      |
+    | job_offer     | text       | Offre d'emploi originale               |
+    | letter_content| text       | Contenu de la lettre generee           |
+    | template_used | uuid       | Reference au modele utilise            |
+    | created_at    | timestamp  | Date de creation                       |
+    +---------------+------------+----------------------------------------+
+
+
+--------------------------------------------------------------------------------
+ETAPE 3.4 : Configurer la securite (Row Level Security)
+--------------------------------------------------------------------------------
+
+    QU'EST-CE QUE LE RLS ?
+    Row Level Security permet de definir des regles d'acces aux donnees.
+    Chaque utilisateur ne peut voir/modifier que SES propres donnees.
+
+    REGLES A CREER POUR CHAQUE TABLE :
+
+        1. SELECT (lecture) :
+           - Les prompts/templates par defaut sont visibles par tous
+           - Les prompts/templates personnels sont visibles par leur proprietaire
+
+        2. INSERT (creation) :
+           - Un utilisateur connecte peut creer ses propres donnees
+
+        3. UPDATE (modification) :
+           - Un utilisateur peut modifier uniquement ses propres donnees
+
+        4. DELETE (suppression) :
+           - Un utilisateur peut supprimer uniquement ses propres donnees
+
+
+--------------------------------------------------------------------------------
+ETAPE 3.5 : Inserer les donnees par defaut
+--------------------------------------------------------------------------------
+
+    DONNEES A INSERER :
+
+        Prompts par defaut :
+            - Prompt standard pour l'analyse d'offres d'emploi
+            - (Optionnel) Prompt specifique pour offres techniques
+            - (Optionnel) Prompt specifique pour offres creative
+
+        Templates par defaut :
+            - Modele Standard (Alternance) - celui actuellement utilise
+            - Modele 2 (plus formel)
+            - Modele 3 (plus concis)
+            - Modele 4 (personnalise)
+
+
+================================================================================
+
 
 
 
 ================================================================================
-✅ CHECKLIST FINALE
+7. PHASE 4 : AUTHENTIFICATION UTILISATEUR
 ================================================================================
 
-Avant de considérer le projet terminé :
+OBJECTIF : Permettre aux utilisateurs de creer un compte et se connecter
 
-Phase 1 - Configuration :
-  □ Compte Supabase créé
-  □ Clés API récupérées
-  □ Compte Anthropic créé
-  □ Structure de projet mise en place
+--------------------------------------------------------------------------------
+ETAPE 4.1 : Activer l'authentification dans Supabase
+--------------------------------------------------------------------------------
 
-Phase 2 - Base de données :
-  □ Table "prompts" créée
-  □ Table "letter_templates" créée
-  □ Politiques RLS configurées
-  □ Données par défaut insérées
+    ACTIONS DANS LE DASHBOARD SUPABASE :
+        1. Aller dans Authentication > Providers
+        2. Activer "Email" (connexion par email/mot de passe)
+        3. (Optionnel) Activer "Google" pour connexion via Google
+        4. Configurer les URLs de redirection
 
-Phase 3 - Authentification :
-  □ Auth Supabase activée
-  □ Fichiers auth.js créés
-  □ Interface de connexion/inscription ajoutée
-  □ Tests de connexion OK
 
-Phase 4 - Gestion des données :
-  □ Chargement des prompts fonctionne
-  □ Chargement des templates fonctionne
-  □ Sauvegarde de prompts OK
-  □ Sauvegarde de templates OK
+--------------------------------------------------------------------------------
+ETAPE 4.2 : Fonctionnalites a implementer
+--------------------------------------------------------------------------------
 
-Phase 5 - API Claude :
-  □ Edge Function créée
-  □ Secret API configuré
-  □ Function déployée
-  □ Génération de lettre fonctionne
+    INSCRIPTION :
+        - Formulaire avec email et mot de passe
+        - Verification de l'email (optionnel mais recommande)
+        - Message de confirmation
 
-Phase 6 - Tests :
-  □ Tests locaux complets
-  □ Tous les bugs corrigés
-  □ Performance satisfaisante
+    CONNEXION :
+        - Formulaire avec email et mot de passe
+        - Gestion des erreurs (mauvais identifiants)
+        - Redirection apres connexion
 
-Phase 7 - Déploiement :
-  □ Site déployé en ligne
-  □ URLs de redirection configurées
-  □ Tests en production OK
+    DECONNEXION :
+        - Bouton de deconnexion
+        - Nettoyage de la session
+
+    GESTION DE L'ETAT :
+        - Afficher differemment l'interface selon si connecte ou non
+        - Proteger certaines fonctionnalites (sauvegarde) aux utilisateurs connectes
+
+
+--------------------------------------------------------------------------------
+ETAPE 4.3 : Interface utilisateur a creer
+--------------------------------------------------------------------------------
+
+    ELEMENTS A AJOUTER :
+
+        [ ] Bouton "Connexion / Inscription" dans le header
+
+        [ ] Modal ou page de connexion :
+            - Onglet Connexion
+            - Onglet Inscription
+            - Lien "Mot de passe oublie"
+
+        [ ] Zone utilisateur connecte :
+            - Afficher l'email de l'utilisateur
+            - Bouton "Deconnexion"
+            - Acces a "Mes prompts" et "Mes modeles"
+
+
+--------------------------------------------------------------------------------
+ETAPE 4.4 : Comportement selon l'etat de connexion
+--------------------------------------------------------------------------------
+
+    UTILISATEUR NON CONNECTE :
+        - Peut utiliser le generateur avec les prompts/templates par defaut
+        - Ne peut PAS sauvegarder de prompts/templates personnels
+        - Voit un message l'invitant a se connecter pour sauvegarder
+
+    UTILISATEUR CONNECTE :
+        - Peut utiliser tous les prompts/templates (defaut + personnels)
+        - Peut creer, modifier, supprimer ses prompts/templates
+        - Peut voir son historique de lettres generees
+
+
+================================================================================
+
 
 
 
 ================================================================================
-🆘 EN CAS DE PROBLÈME
+8. PHASE 5 : INTEGRATION DES APIs IA
 ================================================================================
 
-Tu peux :
+OBJECTIF : Permettre l'analyse automatique des offres d'emploi par IA
 
-1. Consulter les logs :
-   - Console du navigateur (F12)
-   - Logs Edge Function : supabase functions logs generate-letter
-   - Logs Supabase dans le Dashboard
+--------------------------------------------------------------------------------
+ETAPE 5.1 : Installer Supabase CLI
+--------------------------------------------------------------------------------
 
-2. Vérifier étape par étape :
-   - L'utilisateur est-il connecté ?
-   - Les tables existent-elles ?
-   - Les politiques RLS sont-elles correctes ?
-   - L'Edge Function est-elle déployée ?
-   - Le secret API est-il configuré ?
+    Le CLI Supabase permet de creer et deployer des Edge Functions
+    depuis son ordinateur.
 
-3. Tester les composants isolément :
-   - Auth seule
-   - Chargement des prompts seul
-   - Appel Edge Function seul
-   - etc.
+    ACTIONS :
+        1. Installer le CLI via npm
+        2. Se connecter a son compte Supabase
+        3. Lier le projet local au projet Supabase distant
 
 
-Bon courage pour ton projet ! 🚀
-C'est un projet ambitieux mais très réalisable étape par étape.
+--------------------------------------------------------------------------------
+ETAPE 5.2 : Creer l'Edge Function "generate-letter"
+--------------------------------------------------------------------------------
 
-N'hésite pas à revenir vers moi si tu bloques sur une étape spécifique.
+    ROLE DE CETTE FONCTION :
+        - Recevoir l'offre d'emploi et le prompt depuis le navigateur
+        - Appeler l'API IA choisie (Claude ou Gemini)
+        - Parser la reponse JSON
+        - Renvoyer les champs extraits au navigateur
+
+    PARAMETRES D'ENTREE :
+        - jobOffer : Le texte de l'offre d'emploi
+        - prompt : Le prompt a utiliser pour l'analyse
+        - aiProvider : "claude" ou "gemini" (choix de l'API)
+
+    SORTIE :
+        - JSON avec les champs : field1 a field7 (voir details ci-dessous)
+
+
+--------------------------------------------------------------------------------
+ETAPE 5.3 : Format de reponse attendu de l'IA
+--------------------------------------------------------------------------------
+
+    L'IA doit retourner un JSON avec ces champs :
+
+    +--------+----------------------------------------------------------+
+    | Champ  | Description                                              |
+    +--------+----------------------------------------------------------+
+    | field1 | Domaine de l'entreprise                                  |
+    |        | Ex: "la mobilite et l'innovation ferroviaire"            |
+    +--------+----------------------------------------------------------+
+    | field2 | Type de projet/produit/mission de l'entreprise           |
+    |        | Ex: "digitalisation des services, optimisation..."       |
+    +--------+----------------------------------------------------------+
+    | field3 | Langages/frameworks/outils recherches                    |
+    |        | Ex: "Python, React, SQL"                                 |
+    +--------+----------------------------------------------------------+
+    | field4 | Technologies de l'entreprise / type de projet            |
+    |        | Ex: "developpement d'applications web"                   |
+    +--------+----------------------------------------------------------+
+    | field5 | Type de projet/technologie a mettre en avant             |
+    |        | Ex: "developpement web et mobile"                        |
+    +--------+----------------------------------------------------------+
+    | field6 | Nom de l'entreprise                                      |
+    |        | Ex: "SNCF"                                               |
+    +--------+----------------------------------------------------------+
+    | field7 | Intitule exact du poste                                  |
+    |        | Ex: "Developpeur Full Stack en alternance"               |
+    +--------+----------------------------------------------------------+
+
+
+--------------------------------------------------------------------------------
+ETAPE 5.4 : Configurer les cles API dans Supabase
+--------------------------------------------------------------------------------
+
+    Les cles API doivent etre stockees en tant que "secrets" dans Supabase.
+    Elles ne sont jamais visibles dans le code ni accessibles depuis le navigateur.
+
+    SECRETS A CONFIGURER :
+        - ANTHROPIC_API_KEY : Cle pour Claude
+        - GEMINI_API_KEY : Cle pour Gemini
+
+
+--------------------------------------------------------------------------------
+ETAPE 5.5 : Gestion des erreurs et fallback
+--------------------------------------------------------------------------------
+
+    ERREURS A GERER :
+
+        1. API indisponible :
+           - Afficher un message clair a l'utilisateur
+           - Proposer de reessayer ou d'utiliser une autre API
+
+        2. Quota depasse :
+           - Informer l'utilisateur
+           - Basculer automatiquement vers une autre API si possible
+
+        3. Reponse mal formatee :
+           - L'IA peut parfois ne pas retourner du JSON valide
+           - Nettoyer la reponse (enlever les ```json, texte superflu)
+           - Si echec, demander a l'utilisateur de reessayer
+
+        4. Offre d'emploi trop longue :
+           - Certaines APIs ont des limites de tokens
+           - Tronquer ou avertir l'utilisateur
+
+
+--------------------------------------------------------------------------------
+ETAPE 5.6 : Interface utilisateur pour le choix de l'API
+--------------------------------------------------------------------------------
+
+    ELEMENTS A AJOUTER :
+
+        [ ] Selecteur d'API (dropdown ou boutons radio) :
+            - Option "Gemini (Gratuit - Recommande pour tests)"
+            - Option "Claude (Meilleure qualite)"
+
+        [ ] Indicateur de statut :
+            - Icone de chargement pendant l'analyse
+            - Message de succes ou d'erreur
+            - Temps de reponse (optionnel)
+
+
+================================================================================
+
+
+
+
+================================================================================
+9. PHASE 6 : TESTS ET DEPLOIEMENT
+================================================================================
+
+OBJECTIF : S'assurer que tout fonctionne et mettre en ligne
+
+--------------------------------------------------------------------------------
+ETAPE 6.1 : Tests locaux
+--------------------------------------------------------------------------------
+
+    CHECKLIST DE TESTS :
+
+        Portfolio :
+            [ ] Toutes les sections s'affichent correctement
+            [ ] Les videos se lancent
+            [ ] Les liens fonctionnent (LinkedIn, GitHub, etc.)
+            [ ] Le CV se telecharge
+            [ ] Le formulaire de contact fonctionne
+            [ ] Le site est responsive (mobile, tablette, desktop)
+
+        Generateur de lettres :
+            [ ] Le formulaire se charge correctement
+            [ ] Les templates par defaut sont disponibles
+            [ ] Les prompts par defaut sont disponibles
+            [ ] L'analyse IA fonctionne (tester avec une vraie offre)
+            [ ] Les champs se remplissent automatiquement
+            [ ] L'apercu se met a jour en temps reel
+            [ ] Le PDF se genere correctement
+            [ ] Le PDF a le bon format et design
+
+        Authentification :
+            [ ] L'inscription fonctionne
+            [ ] La connexion fonctionne
+            [ ] La deconnexion fonctionne
+            [ ] Les donnees personnelles sont bien separees par utilisateur
+
+        Sauvegarde :
+            [ ] Sauvegarder un prompt personnalise
+            [ ] Retrouver son prompt apres reconnexion
+            [ ] Modifier un prompt
+            [ ] Supprimer un prompt
+            [ ] Meme tests pour les templates
+
+
+--------------------------------------------------------------------------------
+ETAPE 6.2 : Tests de securite
+--------------------------------------------------------------------------------
+
+    VERIFICATIONS :
+
+        [ ] Les cles API ne sont PAS visibles dans le code source (F12)
+        [ ] Un utilisateur ne peut pas voir les donnees d'un autre
+        [ ] Le fichier .env n'est pas accessible
+        [ ] Les Edge Functions refusent les requetes non autorisees
+
+
+--------------------------------------------------------------------------------
+ETAPE 6.3 : Deploiement
+--------------------------------------------------------------------------------
+
+    OPTIONS D'HEBERGEMENT GRATUITES :
+
+    +-------------+------------------+----------------------------------------+
+    | Service     | URL              | Avantages                              |
+    +-------------+------------------+----------------------------------------+
+    | GitHub Pages| pages.github.com | Simple, lie au repo, gratuit           |
+    | Netlify     | netlify.com      | Deploy auto, formulaires inclus        |
+    | Vercel      | vercel.com       | Tres rapide, preview branches          |
+    +-------------+------------------+----------------------------------------+
+
+    ETAPES GENERALES :
+        1. Pusher le code sur GitHub (sans .env !)
+        2. Connecter le repo a l'hebergeur choisi
+        3. Configurer les variables d'environnement sur l'hebergeur
+        4. Deployer
+        5. Configurer le domaine personnalise (optionnel)
+
+
+--------------------------------------------------------------------------------
+ETAPE 6.4 : Configuration post-deploiement
+--------------------------------------------------------------------------------
+
+    ACTIONS DANS SUPABASE :
+        1. Ajouter l'URL de production dans "Redirect URLs"
+        2. Verifier que les Edge Functions sont accessibles
+        3. Tester la connexion depuis le site en production
+
+    TESTS FINAUX :
+        [ ] Tester tout le parcours utilisateur en production
+        [ ] Verifier sur differents navigateurs (Chrome, Firefox, Safari)
+        [ ] Verifier sur mobile
+
+
+================================================================================
+
+
+
+
+================================================================================
+10. RESSOURCES ET LIENS UTILES
+================================================================================
+
+--------------------------------------------------------------------------------
+DOCUMENTATION OFFICIELLE
+--------------------------------------------------------------------------------
+
+    Tailwind CSS :
+        - Documentation : https://tailwindcss.com/docs
+        - Cheat Sheet : https://nerdcave.com/tailwind-cheat-sheet
+
+    Supabase :
+        - Documentation : https://supabase.com/docs
+        - Guide Auth : https://supabase.com/docs/guides/auth
+        - Edge Functions : https://supabase.com/docs/guides/functions
+
+    APIs IA :
+        - Claude (Anthropic) : https://docs.anthropic.com
+        - Gemini (Google) : https://ai.google.dev/docs
+
+    jsPDF :
+        - Documentation : https://artskydj.github.io/jsPDF/docs/jsPDF.html
+        - GitHub : https://github.com/parallax/jsPDF
+
+
+--------------------------------------------------------------------------------
+TUTORIELS VIDEO RECOMMANDES
+--------------------------------------------------------------------------------
+
+    Tailwind CSS :
+        - "Tailwind CSS Full Course" - freeCodeCamp (YouTube)
+        - "Tailwind in 100 Seconds" - Fireship (YouTube)
+
+    Supabase :
+        - "Supabase Crash Course" - Traversy Media (YouTube)
+        - "Build a Full Stack App with Supabase" - freeCodeCamp (YouTube)
+
+
+--------------------------------------------------------------------------------
+OUTILS UTILES
+--------------------------------------------------------------------------------
+
+    Editeur de code :
+        - VS Code : https://code.visualstudio.com
+        - Extensions recommandees : Tailwind CSS IntelliSense, Live Server
+
+    Design et couleurs :
+        - Tailwind Color Palette : https://tailwindcss.com/docs/customizing-colors
+        - Coolors : https://coolors.co (generateur de palettes)
+
+    Tests et debug :
+        - Console navigateur : F12
+        - Supabase Dashboard : logs des Edge Functions
+
+
+--------------------------------------------------------------------------------
+COMMUNAUTES D'AIDE
+--------------------------------------------------------------------------------
+
+    Discord Supabase : https://discord.supabase.com
+    Stack Overflow : tags "supabase", "tailwindcss", "anthropic"
+    Reddit : r/supabase, r/tailwindcss
+
+
+================================================================================
+
+
+
+
+================================================================================
+                              CHECKLIST GLOBALE
+================================================================================
+
+    PHASE 1 - Configuration :
+        [ ] Node.js installe
+        [ ] Projet npm initialise
+        [ ] Tailwind installe et configure
+        [ ] Compte Supabase cree
+        [ ] Compte Google AI Studio cree (Gemini)
+        [ ] (Optionnel) Compte Anthropic cree (Claude)
+        [ ] Fichier .env cree avec les cles
+
+    PHASE 2 - Migration Tailwind :
+        [ ] Page portfolio migree
+        [ ] Page generateur de lettres migree
+        [ ] Design identique a l'original
+        [ ] Responsive fonctionne
+
+    PHASE 3 - Base de donnees :
+        [ ] Table "prompts" creee
+        [ ] Table "letter_templates" creee
+        [ ] Table "generated_letters" creee (optionnel)
+        [ ] Politiques RLS configurees
+        [ ] Donnees par defaut inserees
+
+    PHASE 4 - Authentification :
+        [ ] Auth Supabase activee
+        [ ] Interface connexion/inscription creee
+        [ ] Gestion de session implementee
+        [ ] Tests de connexion OK
+
+    PHASE 5 - APIs IA :
+        [ ] Supabase CLI installe
+        [ ] Edge Function creee
+        [ ] Secrets API configures
+        [ ] Integration Gemini OK
+        [ ] Integration Claude OK
+        [ ] Gestion des erreurs implementee
+
+    PHASE 6 - Deploiement :
+        [ ] Tests locaux complets
+        [ ] Tests de securite OK
+        [ ] Site deploye en ligne
+        [ ] Tests en production OK
+
+
+================================================================================
+                                FIN DU GUIDE
+================================================================================

@@ -1,13 +1,23 @@
+<!--
+================================================================================
+FICHIER ORIGINAL - NE PAS MODIFIER (sauf autorisation explicite)
+================================================================================
+Generateur de lettres de motivation en HTML/CSS/JS brut.
+Sert de reference pour comparer avec la version Tailwind.
+Fichier source: lettre/index2.html
+================================================================================
+-->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lettre de Motivation</title>
-    <link rel="stylesheet" href="style2.css">
+    <link rel="stylesheet" href="lettre-generateur.css">
 </head>
 <body>
     <div class="container">
+        <div class = "first-section">
          <div class ="offer-section">
             <h1>Offre</h1>
             <div class="form-group-offer">
@@ -19,6 +29,14 @@
             
             <h2>Prompt IA</h2>
             <div class="form-group-offer">
+
+                <div class="form-group">
+                    <label for="templateSelect">Modèle du Prompt</label>
+                    <select id="templateSelect">
+                        <option value="default">Modèle Standard (Alternance)</option>
+                    </select>
+                </div>
+
                 <label>Instructions pour l'IA</label>
                 <textarea id="aiPrompt" placeholder="Prompt pour l'IA...">Tu es un assistant qui analyse des offres d'emploi pour remplir automatiquement les champs d'une lettre de motivation.
 
@@ -42,10 +60,19 @@ Règles importantes :
 - Pour field5 : suggère des projets pertinents que le candidat pourrait mettre en avant
 - Réponds UNIQUEMENT avec le JSON, sans texte supplémentaire</textarea>
             </div>
+                
+                <div class="mi-form-group">
+                    <label>Enregistrer le prompt</label>
+                    <div class = "mi-form-input">
+                        <input type="text" id="fieldNamePrompt" placeholder="Nom du prompt">
+                        <button type="button" id="RegisterPromptBtn" onclick="RegisterPrompt()" class="small-generate-btn">Save Prompt</button>
+                    </div>
+                </div>
+                 <button type="button" id="generateBtn" onclick="generateLetter()" class="generate-btn">Remplir Automatiquement avec l'IA</button>
             
-            <button type="button" id="generateBtn" onclick="generateLetter()" class="generate-btn">Remplir Automatiquement avec l'IA</button>
+            
             <div id="loadingMessage" style="display: none; margin-top: 15px; color: #005c1c; font-weight: 600; text-align: center;">
-                ⏳ Analyse en cours...
+                 Analyse en cours...
             </div>
             <div id="errorMessage" style="display: none; margin-top: 15px; color: #c70000; font-weight: 600; text-align: center;"></div>
             
@@ -62,6 +89,13 @@ Règles importantes :
                         <option value="3">Modèle 3</option>
                         <option value="4">Modèle 4</option>
                     </select>
+                </div>
+                <div class="mi-form-group">
+                    <label>Enregistrer le modèle de lettre</label>
+                    <div class = "mi-form-input">
+                        <input type="text" id="fieldNameModelLetter" placeholder="Nom du Modèle de lettre">
+                        <button type="button" id="RegisterModelBtn" onclick="RegisterLetter()" class="small-generate-btn">Save Modele</button>
+                    </div>
                 </div>
                 
                 <hr class="separator">
@@ -117,6 +151,7 @@ Règles importantes :
 
                 <button type="button" onclick="generatePDF()" class="generate-btn">Télécharger en PDF</button>
             </form>
+        </div>
         </div>
 
         <div class="preview-section">
@@ -543,7 +578,7 @@ function fillJobData() {
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('p', 'mm', 'a4');
             const companyName = document.getElementById('field6').value.trim() || "Entreprise";
-            
+            const jobName = document.getElementById('field7').value.trim() || "Poste";
 
             const gradient = pdf.internal.write('q');
             pdf.setFillColor(41, 107, 63);
@@ -633,7 +668,7 @@ function fillJobData() {
             });
             
             
-            pdf.save('Lettre_Motivation_Timothee_ITHIER_' + companyName + '.pdf');
+            pdf.save('Lettre_Motivation_Timothee_ITHIER_' + companyName + '_' + jobName + '.pdf');
         }
     </script>
 </body>

@@ -1,3 +1,12 @@
+/*
+================================================================================
+FICHIER ORIGINAL - NE PAS MODIFIER (sauf autorisation explicite)
+================================================================================
+CSS du generateur de lettres de motivation en CSS brut.
+Sert de reference pour comparer avec la version Tailwind.
+Fichier source: lettre/style2.css
+================================================================================
+*/
 * {
     margin: 0;
     padding: 0;
@@ -11,11 +20,14 @@ body {
     padding: 20px;
 }
 
-.container {
+
+.first-section {
     display: flex;
-    grid-template-columns: 1fr 1fr;
+    flex-wrap: wrap;
+    margin: auto auto;
     gap: 30px;
     width:100%;
+    padding: 10px;  
 }
 
 h1 {
@@ -30,19 +42,25 @@ h2 {
     font-size: 20px;
 }
 
+
 .editor-section, .preview-section, .offer-section {
     background: white;
     padding: 10px;
-    width:32%;
+    width:48%;
     border-radius: 15px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
 }
 
-.form-group, .form-group-offer {
+.form-group, .form-group-offer, .mi-form-group {
     margin-bottom: 25px;
 }
 
-.form-group label, .form-group-offer label {
+.mi-form-input {
+    display:flex;
+    flex-direction: row;
+}
+
+.form-group label, .form-group-offer label, .mi-form-group label {
     display: block;
     margin-bottom: 8px;
     color: #005c1c; 
@@ -58,15 +76,19 @@ h2 {
     font-size: 14px;
     transition: all 0.3s ease;
     background-color: white;
-    height: 180px;
+    height: 200px;
     resize: none; 
     font-family: inherit; 
 }
 
-.form-group-offer textarea:focus {
-    outline: none;
-    border-color: #005c1c;
-    box-shadow: 0 0 0 3px rgba(0, 92, 28, 0.1);
+.mi-form-group input, .mi-form-group select{ 
+    width: 50%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background-color: white; 
 }
 
 .form-group input, .form-group select{ 
@@ -79,11 +101,13 @@ h2 {
     background-color: white; 
 }
 
-.form-group input:focus, .form-group select:focus {
+.form-group input:focus, .form-group select:focus, .mi-form-group input:focus, .mi-form-group select:focus{
     outline: none;
     border-color: #005c1c;
     box-shadow: 0 0 0 3px rgba(0, 92, 28, 0.1);
 }
+
+
 
 .separator { 
     border: 0;
@@ -125,6 +149,21 @@ h2 {
     text-align: center;
 }
 
+.small-generate-btn {
+    width: 20%;
+    padding: 10px;
+    margin-left:auto;
+    display: block;
+    background: linear-gradient(135deg, #0b2e00 0%, #006128 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
 .generate-btn {
     width: 100%;
     padding: 15px;
@@ -138,19 +177,13 @@ h2 {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.generate-btn:hover {
+.generate-btn:hover, .small-generate-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 20px rgba(0, 184, 61, 0.699);
 }
 
 .generate-btn:active {
     transform: translateY(0);
-}
-
-.generate-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
 }
 
 .letter-preview {
@@ -245,8 +278,21 @@ h2 {
     font-weight: 600;
 }
 
-@media (max-width: 1024px) {
-    .container {
-        grid-template-columns: 1fr;
+@media (max-width: 1143px) {
+    
+    body {
+        padding: 10px;
+    }
+    
+    .first-section {
+        display: flex;
+        flex-direction: column;
+        padding: 0; 
+        gap: 20px; 
+    }
+
+    .editor-section, .preview-section, .offer-section {
+        width: 90%;
+        margin: auto ; 
     }
 }

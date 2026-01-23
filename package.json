@@ -1,0 +1,26 @@
+{
+  "name": "t-ent-500-lyn_timothee-ithier",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "tailwindcss -i ./css/input.css -o ./css/output.css",
+    "watch:css": "tailwindcss -i ./css/input.css -o ./css/output.css --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EpitechMscProPromo2028/T-ENT-500-LYN_timothee-ithier.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EpitechMscProPromo2028/T-ENT-500-LYN_timothee-ithier/issues"
+  },
+  "homepage": "https://github.com/EpitechMscProPromo2028/T-ENT-500-LYN_timothee-ithier#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.18",
+    "tailwindcss": "^4.1.18"
+  }
+}

@@ -1,0 +1,7 @@
+/*
+ * Fichier source Tailwind CSS
+ * Role: Point d'entree pour la compilation Tailwind
+ * Usage: npm run build:css (compile vers output.css)
+ */
+
+@import "tailwindcss";
