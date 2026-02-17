@@ -127,12 +127,15 @@ Le fichier CLAUDE.md contient des consignes pour claude (celle-ci), mais contien
 - [x] `docker compose up` — verifie, tout demarre (PostgreSQL + backend + frontend) (17 Fevrier 2026)
 
 #### Etape 3.2 — Backend complet
-- [ ] Coder `config/db.js` — connexion PostgreSQL (pool pg)
-- [ ] Coder les models (requetes SQL brutes) :
-  - [ ] `models/user.model.js`
-  - [ ] `models/prompt.model.js`
-  - [ ] `models/template.model.js`
-  - [ ] `models/letter.model.js`
+- [x] Coder `config/db.js` — connexion PostgreSQL (pool pg) (17 Fevrier 2026)
+- [x] Coder les models (requetes SQL brutes) (17 Fevrier 2026) :
+  - [x] `models/user.model.js`
+  - [x] `models/prompt.model.js`
+  - [x] `models/letter_template.model.js`
+  - [x] `models/letter_generated.model.js`
+  - [x] `models/resume_template.model.js`
+  - [x] `models/resume_generated.model.js`
+  - [x] `models/skills.model.js`
 - [ ] Coder les controllers (logique CRUD) :
   - [ ] `controllers/auth.controller.js`
   - [ ] `controllers/prompts.controller.js`
