@@ -18,13 +18,15 @@ services:
 
   back-end:
     build: ./back-end
-    env_file: 
+    env_file:
       .env
+    environment:
+      DB_HOST: postgres
     volumes:
       - ./back-end:/app
       - back-end_node_modules:/app/node_modules
     command: npm run dev
-    ports: 
+    ports:
       - "8080:8080"
     depends_on:
       postgres:

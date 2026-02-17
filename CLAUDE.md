@@ -2,7 +2,7 @@
 
 > **Auteur :** Timothee Ithier
 > **Projet :** T-ENT-500-LYN (Epitech Lyon)
-> **Derniere MAJ :** 16 Fevrier 2026
+> **Derniere MAJ :** 17 Fevrier 2026
 
 ---
 
@@ -123,12 +123,11 @@ Le fichier CLAUDE.md contient des consignes pour claude (celle-ci), mais contien
 - [x] Creer `back-end/package.json` (liste des dependances, pas besoin de `npm install` en local) (16 Fevrier 2026)
 - [x] Coder `server.js` minimal (Express qui repond "hello" sur `/`) (16 Fevrier 2026)
 - [x] Coder `db/init.sql` — CREATE TABLE + table skills ajoutee (16 Fevrier 2026)
-- [ ] Coder `db/seed.sql` — INSERT donnees par defaut
-- [ ] `docker compose up` — verifier que tout demarre (PostgreSQL + backend)
+- [x] Coder `db/seed.sql` — INSERT donnees par defaut (1 user, 1 prompt, 4 templates lettres, 68 skills) (17 Fevrier 2026)
+- [x] `docker compose up` — verifie, tout demarre (PostgreSQL + backend + frontend) (17 Fevrier 2026)
 
 #### Etape 3.2 — Backend complet
 - [ ] Coder `config/db.js` — connexion PostgreSQL (pool pg)
-- [ ] Coder `db/seed.sql` — INSERT donnees par defaut
 - [ ] Coder les models (requetes SQL brutes) :
   - [ ] `models/user.model.js`
   - [ ] `models/prompt.model.js`
@@ -152,14 +151,14 @@ Le fichier CLAUDE.md contient des consignes pour claude (celle-ci), mais contien
 - [ ] Completer `server.js` — point d'entree Express complet
 - [ ] Tester toutes les routes avec Postman
 
-### Phase 4 — Frontend React : A FAIRE
+### Phase 4 — Frontend React : EN COURS
 > **C'est Timothee qui code tout ca.**
 
 - [x] Structure de dossiers `front-end/` creee (9 Fevrier 2026)
-- [ ] Initialiser avec `npm create vite@latest . -- --template react`
-- [ ] Integrer Tailwind CSS dans React
+- [x] Initialiser avec `npm create vite@latest` (React + Vite) (17 Fevrier 2026)
+- [x] Integrer Tailwind CSS dans React (plugin @tailwindcss/vite) (17 Fevrier 2026)
 - [ ] Migrer le portfolio vers React (composants)
-- [ ] Migrer le generateur de lettres vers React
+- [x] Migrer le generateur de lettres vers React (composants : OfferSection, EditorSection, PreviewSection, Header avec toggle) (17 Fevrier 2026)
 - [ ] Creer pages Login / Register
 - [ ] Creer les services API (connexion frontend → backend)
 - [ ] `AuthContext.jsx` pour gerer la session JWT

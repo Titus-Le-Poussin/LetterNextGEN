@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "build:css": "tailwindcss -i ./css/input.css -o ./css/output.css",
     "watch:css": "tailwindcss -i ./css/input.css -o ./css/output.css --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,6 +24,13 @@
   "homepage": "https://github.com/EpitechMscProPromo2028/T-ENT-500-LYN_timothee-ithier#readme",
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.18",
-    "tailwindcss": "^4.1.18"
+    "@tailwindcss/vite": "^4.1.18",
+    "@vitejs/plugin-react": "^5.1.4",
+    "tailwindcss": "^4.1.18",
+    "vite": "^7.3.1"
+  },
+  "dependencies": {
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
   }
 }
