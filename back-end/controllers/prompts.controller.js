@@ -1,0 +1,71 @@
+const promptModel = require('../models/prompt.model')
+
+
+
+const createPrompt = async (req, res) => {
+    try {
+      const { name, content } = req.body
+      const user_id = req.user.id
+      const result = await 
+      promptModel.create(user_id,
+  name, content)
+      res.status(201).json(result.rows[0])
+    } catch (error) {
+      res.status(500).json({ error: error.message })
+    }
+  }
+
+
+
+const getPrompts = async (req, res) => {
+    try {
+      const result = await
+      promptModel.getByUser(req.user.id)
+      res.json(result.rows)
+    } catch (error) {
+      res.status(500).json({ error: error.message })
+    }
+  }
+
+
+const getAllPrompts = async (req, res) => {
+    try {
+      const result = await
+      promptModel.getAllPrompt()
+      res.json(result.rows)
+    } catch (error) {
+      res.status(500).json({ error: error.message })
+    }
+  }
+
+
+const updatePrompt = async (req, res) => {
+    try {
+      const { name, content } = req.body
+      const result = await 
+      promptModel.updateByID(req.params.id, name, content)
+      res.status(201).json(result.rows[0])
+    } catch (error) {
+      res.status(500).json({ error: error.message })
+    }
+  }
+
+
+
+
+const deletePrompt = async (req, res) => {
+    try {
+      const result = await
+      promptModel.deleteByID(req.params.id)
+      res.json(result.rows)
+    } catch (error) {
+      res.status(500).json({ error: error.message })
+    }
+  }
+
+
+
+
+
+    
+module.exports = { createPrompt, getPrompts, getAllPrompts, updatePrompt, deletePrompt}

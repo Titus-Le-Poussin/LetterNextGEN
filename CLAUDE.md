@@ -2,7 +2,7 @@
 
 > **Auteur :** Timothee Ithier
 > **Projet :** T-ENT-500-LYN (Epitech Lyon)
-> **Derniere MAJ :** 17 Fevrier 2026
+> **Derniere MAJ :** 18 Fevrier 2026
 
 ---
 
@@ -137,8 +137,8 @@ Le fichier CLAUDE.md contient des consignes pour claude (celle-ci), mais contien
   - [x] `models/resume_generated.model.js`
   - [x] `models/skills.model.js`
 - [ ] Coder les controllers (logique CRUD) :
-  - [ ] `controllers/auth.controller.js`
-  - [ ] `controllers/prompts.controller.js`
+  - [x] `controllers/auth.controller.js` (18 Fevrier 2026)
+  - [x] `controllers/prompts.controller.js` (18 Fevrier 2026)
   - [ ] `controllers/templates.controller.js`
   - [ ] `controllers/letters.controller.js`
   - [ ] `controllers/ai.controller.js`
