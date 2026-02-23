@@ -41,6 +41,13 @@ const getById = (id) => {
     )
   }
 
+  const getByCategory = (category_name) => {
+    return pool.query(
+      'SELECT * FROM skills WHERE category_name = $1',
+      [category_name]
+    )
+  }
+
   
 
-module.exports = { create, getByUser, getById, getAllSkills, updateByID, deleteByID }
+module.exports = { create, getByUser, getById, getAllSkills, getByCategory, updateByID, deleteByID }

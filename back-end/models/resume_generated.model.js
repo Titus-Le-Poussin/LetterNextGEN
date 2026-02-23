@@ -1,9 +1,9 @@
 const pool = require('../config/db')                                                                                                                                                        
                  
-const create = (user_id, company_name, job_title, job_offer, resume_content) => {                                                                                                                                             
+const create = (user_id, company_name, job_title, job_offer, skills) => {                                                                                                                                             
     return pool.query(                                                                                                                                                                        
-      'INSERT INTO generated_resume (user_id, company_name, job_title, job_offer, resume_content) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [user_id, company_name, job_title, job_offer, resume_content]
+      'INSERT INTO generated_resume (user_id, company_name, job_title, job_offer, skills) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [user_id, company_name, job_title, job_offer, skills]
     )
   }
 
@@ -27,10 +27,10 @@ const getById = (id) => {
     )
   }
 
-  const updateByID = (id, company_name, job_title, job_offer, resume_content) => {
+  const updateByID = (id, company_name, job_title, job_offer, skills) => {
     return pool.query(
-        'UPDATE generated_resume SET company_name = $2, job_title = $3, job_offer = $4, resume_content = $5 WHERE id = $1 RETURNING *',
-        [id, company_name, job_title, job_offer, resume_content]
+        'UPDATE generated_resume SET company_name = $2, job_title = $3, job_offer = $4, skills = $5 WHERE id = $1 RETURNING *',
+        [id, company_name, job_title, job_offer, skills]
     )
   }
 

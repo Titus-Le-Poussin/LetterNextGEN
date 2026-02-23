@@ -54,7 +54,7 @@ user_id         INTEGER REFERENCES users(id) ON DELETE CASCADE,
 company_name    VARCHAR(255),
 job_title       VARCHAR(255),
 job_offer       TEXT,
-resume_content  TEXT,
+skills          JSONB,
 template_id     INTEGER REFERENCES resume_templates(id) ON DELETE SET NULL,
 created_at      TIMESTAMP DEFAULT NOW()
 );

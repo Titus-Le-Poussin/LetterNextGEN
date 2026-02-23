@@ -136,20 +136,26 @@ Le fichier CLAUDE.md contient des consignes pour claude (celle-ci), mais contien
   - [x] `models/resume_template.model.js`
   - [x] `models/resume_generated.model.js`
   - [x] `models/skills.model.js`
-- [ ] Coder les controllers (logique CRUD) :
+- [x] Coder les controllers (logique CRUD) :
   - [x] `controllers/auth.controller.js` (18 Fevrier 2026)
   - [x] `controllers/prompts.controller.js` (18 Fevrier 2026)
-  - [ ] `controllers/templates.controller.js`
-  - [ ] `controllers/letters.controller.js`
+  - [x] `controllers/letter_template.controller.js` (23 Fevrier 2026)
+  - [x] `controllers/letter_generated.controller.js` (23 Fevrier 2026)
+  - [x] `controllers/resume_template.controller.js` (23 Fevrier 2026)
+  - [x] `controllers/resume_generated.controller.js` (23 Fevrier 2026)
+  - [x] `controllers/skills.controller.js` (23 Fevrier 2026)
   - [ ] `controllers/ai.controller.js`
 - [ ] Coder les routes :
-  - [ ] `routes/auth.routes.js`
+  - [x] `routes/auth.routes.js` (23 Fevrier 2026)
   - [ ] `routes/prompts.routes.js`
-  - [ ] `routes/templates.routes.js`
-  - [ ] `routes/letters.routes.js`
+  - [ ] `routes/letter_template.routes.js`
+  - [ ] `routes/letter_generated.routes.js`
+  - [ ] `routes/resume_template.routes.js`
+  - [ ] `routes/resume_generated.routes.js`
+  - [ ] `routes/skills.routes.js`
   - [ ] `routes/ai.routes.js`
 - [ ] Coder le middleware :
-  - [ ] `middleware/auth.middleware.js` — verification JWT
+  - [x] `middleware/auth.middleware.js` — verification JWT (23 Fevrier 2026)
   - [ ] `middleware/error.middleware.js` — gestion d'erreurs
 - [ ] Completer `server.js` — point d'entree Express complet
 - [ ] Tester toutes les routes avec Postman
