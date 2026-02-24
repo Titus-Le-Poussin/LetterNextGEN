@@ -17,10 +17,20 @@ const createPrompt = async (req, res) => {
 
 
 
-const getPrompts = async (req, res) => {
+const getPromptByUser = async (req, res) => {
     try {
       const result = await
       promptModel.getByUser(req.user.id)
+      res.json(result.rows)
+    } catch (error) {
+      res.status(500).json({ error: error.message })
+    }
+  }
+
+const getPromptByID = async (req, res) => {
+    try {
+      const result = await
+      promptModel.getById(req.params.id)
       res.json(result.rows)
     } catch (error) {
       res.status(500).json({ error: error.message })
@@ -68,4 +78,4 @@ const deletePrompt = async (req, res) => {
 
 
     
-module.exports = { createPrompt, getPrompts, getAllPrompts, updatePrompt, deletePrompt}
+module.exports = { createPrompt, getPromptByUser, getPromptByID, getAllPrompts, updatePrompt, deletePrompt}

@@ -17,6 +17,9 @@
     "jsonwebtoken": "9.0.3",
     "bcrypt": "6.0.0",
     "cors": "2.8.6",
-    "dotenv": "17.3.1"
+    "dotenv": "17.3.1",
+    "@google/generative-ai": "^0.21.0",
+    "@anthropic-ai/sdk": "^0.32.0"
+
   }
 }

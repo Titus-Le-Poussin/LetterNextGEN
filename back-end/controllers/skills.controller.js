@@ -27,10 +27,20 @@ const getSkills = async (req, res) => {
     }
   }
 
-const getByCategory = async (req, res) => {
+const getSkillsByCategory = async (req, res) => {
     try {
       const result = await
       SkillsModel.getByCategory(req.params.category_name)
+      res.json(result.rows)
+    } catch (error) {
+      res.status(500).json({ error: error.message })
+    }
+  }
+
+const getSkillsByID = async (req, res) => {
+    try {
+      const result = await
+      SkillsModel.getById(req.params.id)
       res.json(result.rows)
     } catch (error) {
       res.status(500).json({ error: error.message })
@@ -80,4 +90,4 @@ const deleteSkills = async (req, res) => {
 
 
     
-module.exports = { createSkills, getSkills, getByCategory, getAllSkills, updateSkills, deleteSkills}
+module.exports = { createSkills, getSkills, getSkillsByCategory, getSkillsByID, getAllSkills, updateSkills, deleteSkills}

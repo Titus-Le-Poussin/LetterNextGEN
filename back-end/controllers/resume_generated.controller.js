@@ -27,6 +27,16 @@ const getResumeGenerated = async (req, res) => {
     }
   }
 
+const getresumegeneratedbyID = async (req, res) => {
+    try {
+      const result = await
+      resume_GeneratedModel.getById(req.params.id)
+      res.json(result.rows)
+    } catch (error) {
+      res.status(500).json({ error: error.message })
+    }
+  }
+
 
 const getAllResumeGenerated = async (req, res) => {
     try {
@@ -69,4 +79,4 @@ const deleteResumeGenerated = async (req, res) => {
 
 
     
-module.exports = { createResumeGenerated, getResumeGenerated, getAllResumeGenerated, updateResumeGenerated, deleteResumeGenerated}
+module.exports = { createResumeGenerated, getresumegeneratedbyID, getResumeGenerated, getAllResumeGenerated, updateResumeGenerated, deleteResumeGenerated}

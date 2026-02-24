@@ -27,6 +27,16 @@ const getResumeTemplate = async (req, res) => {
     }
   }
 
+const getResumeTemplatebyID = async (req, res) => {
+    try {
+      const result = await
+      resume_templateModel.getById(req.params.id)
+      res.json(result.rows)
+    } catch (error) {
+      res.status(500).json({ error: error.message })
+    }
+  }
+
 
 const getAllResumeTemplate = async (req, res) => {
     try {
@@ -68,4 +78,4 @@ const deleteResumeTemplate = async (req, res) => {
 
 
     
-module.exports = { createResumeTemplate, getResumeTemplate, getAllResumeTemplate, updateResumeTemplate, deleteResumeTemplate}
+module.exports = { createResumeTemplate, getResumeTemplatebyID, getResumeTemplate, getAllResumeTemplate, updateResumeTemplate, deleteResumeTemplate}

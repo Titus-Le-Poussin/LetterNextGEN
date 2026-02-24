@@ -27,6 +27,16 @@ const getLettergenerated = async (req, res) => {
     }
   }
 
+const getLettergeneratedbyID = async (req, res) => {
+    try {
+      const result = await
+      letter_generatedModel.getById(req.params.id)
+      res.json(result.rows)
+    } catch (error) {
+      res.status(500).json({ error: error.message })
+    }
+  }
+
 
 const getAllLettergenerated = async (req, res) => {
     try {
@@ -68,4 +78,4 @@ const deleteLettergenerated = async (req, res) => {
 
 
     
-module.exports = { createLettergenerated, getLettergenerated, getAllLettergenerated, updateLettergenerated, deleteLettergenerated}
+module.exports = { createLettergenerated, getLettergeneratedbyID, getLettergenerated, getAllLettergenerated, updateLettergenerated, deleteLettergenerated}

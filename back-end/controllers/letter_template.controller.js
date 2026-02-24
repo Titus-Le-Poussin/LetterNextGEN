@@ -27,6 +27,16 @@ const getLetterTemplate = async (req, res) => {
     }
   }
 
+const getByIDLetterTemplate = async (req, res) => {
+    try {
+      const result = await
+      letter_templateModel.getById(req.params.id)
+      res.json(result.rows)
+    } catch (error) {
+      res.status(500).json({ error: error.message })
+    }
+  }
+
 
 const getAllLetterTemplate = async (req, res) => {
     try {
@@ -68,4 +78,4 @@ const deleteLetterTemplate = async (req, res) => {
 
 
     
-module.exports = { createLetterTemplate, getLetterTemplate, getAllLetterTemplate, updateLetterTemplate, deleteLetterTemplate}
+module.exports = { createLetterTemplate, getLetterTemplate, getByIDLetterTemplate, getAllLetterTemplate, updateLetterTemplate, deleteLetterTemplate}

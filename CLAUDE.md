@@ -144,20 +144,20 @@ Le fichier CLAUDE.md contient des consignes pour claude (celle-ci), mais contien
   - [x] `controllers/resume_template.controller.js` (23 Fevrier 2026)
   - [x] `controllers/resume_generated.controller.js` (23 Fevrier 2026)
   - [x] `controllers/skills.controller.js` (23 Fevrier 2026)
-  - [ ] `controllers/ai.controller.js`
-- [ ] Coder les routes :
+  - [x] `controllers/ai.controller.js` (24 Fevrier 2026)
+- [x] Coder les routes :
   - [x] `routes/auth.routes.js` (23 Fevrier 2026)
-  - [ ] `routes/prompts.routes.js`
-  - [ ] `routes/letter_template.routes.js`
-  - [ ] `routes/letter_generated.routes.js`
-  - [ ] `routes/resume_template.routes.js`
-  - [ ] `routes/resume_generated.routes.js`
-  - [ ] `routes/skills.routes.js`
-  - [ ] `routes/ai.routes.js`
-- [ ] Coder le middleware :
+  - [x] `routes/prompts.routes.js` (24 Fevrier 2026)
+  - [x] `routes/letter_template.routes.js` (24 Fevrier 2026)
+  - [x] `routes/letter_generated.routes.js` (24 Fevrier 2026)
+  - [x] `routes/resume_template.routes.js` (24 Fevrier 2026)
+  - [x] `routes/resume_generated.routes.js` (24 Fevrier 2026)
+  - [x] `routes/skills.routes.js` (24 Fevrier 2026)
+  - [x] `routes/ai.routes.js` (24 Fevrier 2026)
+- [x] Coder le middleware :
   - [x] `middleware/auth.middleware.js` — verification JWT (23 Fevrier 2026)
-  - [ ] `middleware/error.middleware.js` — gestion d'erreurs
-- [ ] Completer `server.js` — point d'entree Express complet
+  - [x] `middleware/error.middleware.js` — gestion d'erreurs (24 Fevrier 2026)
+- [x] Completer `server.js` — point d'entree Express complet (24 Fevrier 2026)
 - [ ] Tester toutes les routes avec Postman
 
 ### Phase 4 — Frontend React : EN COURS
