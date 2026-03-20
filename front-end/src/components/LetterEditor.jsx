@@ -1,4 +1,4 @@
-function EditorSection() {
+function LetterEditor() {
       return (
            <div className="bg-white p-4 rounded-2xl shadow-xl">
                 <h1 className="text-gray-800 mb-8 text-2xl font-bold">Lettre de motivation</h1>
@@ -78,4 +78,4 @@ function EditorSection() {
       )
   }
 
-export default EditorSection
+export default LetterEditor

@@ -1,4 +1,4 @@
-function PreviewSection() {
+function LetterPreview() {
     return (
         <div className="bg-white p-4 rounded-2xl shadow-xl">
             <h2 className="text-gray-800 mb-5 text-xl font-bold">Apercu de la lettre</h2>
@@ -35,4 +35,4 @@ function PreviewSection() {
     )
 }
 
-export default PreviewSection
+export default LetterPreview

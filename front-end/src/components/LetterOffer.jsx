@@ -1,4 +1,4 @@
-function OfferSection() {
+function LetterOffer() {
     return (
         <div className="bg-white p-4 rounded-2xl shadow-xl">
             <h1 className="text-gray-800 mb-8 text-2xl font-bold">Offre</h1>
@@ -62,4 +62,4 @@ Regles importantes :
     )
 }
 
-export default OfferSection
+export default LetterOffer

@@ -1,30 +1,53 @@
 import { useState } from 'react'
 import Header from '../components/Header'
-import OfferSection from '../components/OfferSection'
-import EditorSection from '../components/EditorSection'
-import PreviewSection from '../components/PreviewSection'
+import LetterOffer from '../components/LetterOffer'
+import LetterEditor from '../components/LetterEditor'
+import LetterPreview from '../components/LetterPreview'
+import LetterTemplate from '../components/LetterTemplate'
+import CVTemplate from '../components/CVTemplate'
+import CVPreview from '../components/CVPreview'
 
 
 function JobTools(){
-    const [showOffer, setShowOffer] = useState(true)
-    const [showEditor, setShowEditor] = useState(true)
-    const [showPreview, setShowPreview] = useState(true)
+    const [showLetterTemplate, setShowLetterTemplate] = useState(true)
+    const [showLetterOffer, setShowLetterOffer] = useState(true)
+    const [showLetterEditor, setShowLetterEditor] = useState(true)
+    const [showCVTemplate, setShowCVTemplate] = useState(true)
+    const [showCVEditor, setShowCVEditor] = useState(true)
+    const [showLetterPreview, setShowLetterPreview] = useState(true)
+    const [showCVPreview, setShowCVPreview] = useState(true)
 
     return(
         <div className="font-sans bg-gradient-to-br from-[#288653] to-[#3b6b49] min-h-screen p-5">
             <div className="container mx-auto">
                 <Header
-                    showOffer={showOffer}
-                    showEditor={showEditor}
-                    showPreview={showPreview}
-                    setShowOffer={setShowOffer}
-                    setShowEditor={setShowEditor}
-                    setShowPreview={setShowPreview}
+                    showLetterTemplate={showLetterTemplate}
+                    setShowLetterTemplate={setShowLetterTemplate}
+                    showLetterOffer={showLetterOffer}
+                    setShowLetterOffer={setShowLetterOffer}
+                    showLetterEditor={showLetterEditor}
+                    setShowLetterEditor={setShowLetterEditor}
+                    showCVTemplate={showCVTemplate}
+                    setShowCVTemplate={setShowCVTemplate}
+                    showCVEditor={showCVEditor}
+                    setShowCVEditor={setShowCVEditor}
+                    showLetterPreview={showLetterPreview}
+                    setShowLetterPreview={setShowLetterPreview}
+                    showCVPreview={showCVPreview}
+                    setShowCVPreview={setShowCVPreview}
                 />
-                <div className="flex flex-wrap gap-8 w-full p-2 max-lg:flex-col">
-                    <div className={`flex-1 min-w-[400px] max-lg:min-w-0 max-lg:w-[90%] max-lg:mx-auto ${showOffer ? '' : 'hidden'}`}><OfferSection /></div>
-                    <div className={`flex-1 min-w-[400px] max-lg:min-w-0 max-lg:w-[90%] max-lg:mx-auto ${showEditor ? '' : 'hidden'}`}><EditorSection /></div>
-                    <div className={`flex-1 min-w-[400px] max-lg:min-w-0 max-lg:w-[90%] max-lg:mx-auto ${showPreview ? '' : 'hidden'}`}><PreviewSection /></div>
+                <div className="grid grid-cols-2 gap-5">
+                    <div className="col-start-1 flex flex-col gap-5">
+                        {showLetterTemplate && <LetterTemplate />}
+                        {showLetterOffer && <LetterOffer />}
+                        {showLetterEditor && <LetterEditor />}
+                        {showCVTemplate && <CVTemplate />}
+                        {showCVEditor && <div>CVEditor (à créer)</div>}
+                    </div>
+                    <div className="col-start-2 flex flex-col gap-5">
+                        {showLetterPreview && <LetterPreview />}
+                        {showCVPreview && <CVPreview />}
+                    </div>
                 </div>
             </div>
         </div>

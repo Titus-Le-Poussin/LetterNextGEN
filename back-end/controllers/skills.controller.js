@@ -21,6 +21,7 @@ const getSkills = async (req, res) => {
     try {
       const result = await
       SkillsModel.getByUser(req.user.id)
+      if (result.rows.length === 0) return res.status(404).json({ error: 'Non trouvé' })
       res.json(result.rows)
     } catch (error) {
       res.status(500).json({ error: error.message })
@@ -41,6 +42,7 @@ const getSkillsByID = async (req, res) => {
     try {
       const result = await
       SkillsModel.getById(req.params.id)
+      if (result.rows.length === 0) return res.status(404).json({ error: 'Non trouvé' })
       res.json(result.rows)
     } catch (error) {
       res.status(500).json({ error: error.message })
@@ -64,8 +66,9 @@ const getAllSkills = async (req, res) => {
 const updateSkills = async (req, res) => {
     try {
       const { skill_name, category_name } = req.body
-      const result = await 
+      const result = await
       SkillsModel.updateByID(req.params.id, skill_name, category_name)
+      if (result.rows.length === 0) return res.status(404).json({ error: 'Non trouvé' })
       res.status(201).json(result.rows[0])
     } catch (error) {
       res.status(500).json({ error: error.message })
@@ -79,7 +82,8 @@ const deleteSkills = async (req, res) => {
     try {
       const result = await
       SkillsModel.deleteByID(req.params.id)
-      res.json(result.rows)
+      if (result.rowCount === 0) return res.status(404).json({ error: 'Non trouvé' })
+      res.json({ message: 'Supprimé' })
     } catch (error) {
       res.status(500).json({ error: error.message })
     }

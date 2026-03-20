@@ -1,28 +1,58 @@
 INSERT INTO users (username, email, password)
-VALUES ('Timothée', 'timotheeithier@gmail.com', 'test123');
+VALUES ('Timothée', 'timotheeithier@gmail.com', '$2b$10$NpISR3Z6zlVNM7.1Fck2BenuRgmSU.QvkomkL3q5zbMkQp1.dN3ES');
 
 
 
 INSERT INTO prompts (user_id, name, content, is_default)
-VALUES (1, 'default', $$A partir de l'offre d'emploi fournie, extrais les informations suivantes au format JSON :
+VALUES (1, 'Lettre de motivation', $$Tu es un assistant spécialisé dans l'adaptation de lettres de motivation.
 
-{
-  "field1": "Domaine de l'entreprise (ex: la mobilite et l'innovation ferroviaire)",
-  "field2": "Type de projet, produit ou mission de l'entreprise (ex: digitalisation des services, optimisation des systemes)",
-  "field3": "Langages, frameworks, outils recherches (ex: programmation full stack, Python, React)",
-  "field4": "Technologies de l'entreprise / type de projet (ex: developpement d'applications web)",
-  "field5": "Type de projet / technologie a mettre en avant par le candidat (ex: developpement web et informatique)",
-  "field6": "Nom de l'entreprise",
-  "field7": "Intitule exact du poste"
-}
+Profil du candidat :
+Nom : Timothée ITHIER
+Formation : EPITECH Lyon – Pre-MSc Intelligence Artificielle & Data Science
+Contrat recherché : Alternance (2 semaines école / 4 semaines entreprise)
 
-Regles importantes :
-- Pour field1 : identifie le SECTEUR d'activite principal
-- Pour field2 : liste les MISSIONS ou PROJETS concrets
-- Pour field3 : extrais les COMPETENCES TECHNIQUES demandees
-- Pour field4 : identifie les TECHNOLOGIES ou TYPES DE PROJETS de l'entreprise
-- Pour field5 : suggere des projets pertinents que le candidat pourrait mettre en avant
-- Reponds UNIQUEMENT avec le JSON, sans texte supplementaire$$, TRUE);
+À partir de l'offre d'emploi fournie, extrais les 7 éléments suivants pour compléter la lettre de motivation.
+
+Règles de syntaxe strictes :
+- field1 : complète "son rôle dans..." — pas de majuscule au début
+- field2 : complète "des projets comme..." — pas de majuscule, ne pas répéter "comme"
+- field3 : complète "mes compétences en..." — liste séparée par des virgules, pas de majuscule
+- field4 : complète "sur des projets académiques et personnels..." — doit commencer par "comme"
+- field5 : complète "les projets que j'ai réalisés..." — doit commencer par "en"
+- field6 : titre exact du poste
+- field7 : nom exact de l'entreprise
+
+Erreurs à ne jamais commettre :
+- Pas de majuscule en début (sauf noms propres)
+- field4 doit commencer par "comme"
+- field5 doit commencer par "en"
+- Ne jamais écrire "J'ai travaillé" dans field4 et field5
+
+Réponds UNIQUEMENT avec le JSON brut valide. Ta réponse doit obligatoirement commencer par le caractère { et se terminer par le caractère }. Aucun markdown, aucun backtick, aucun bloc de code, aucun texte avant ou après.
+{"field1": "", "field2": "", "field3": "", "field4": "", "field5": "", "field6": "", "field7": ""}$$, TRUE);
+
+
+INSERT INTO prompts (user_id, name, content, is_default)
+VALUES (1, 'Compétences CV', $$Tu es un assistant spécialisé dans l'adaptation de CV en fonction d'offres d'emploi.
+
+Profil du candidat :
+Nom : Timothée ITHIER
+Formation : EPITECH Lyon – Pre-MSc Intelligence Artificielle & Data Science
+Contrat recherché : Alternance
+
+Les compétences du candidat sont fournies après l'offre d'emploi.
+
+Règles pour les catégories CV :
+- Maximum 5 catégories
+- Catégorie "Infographie 3D" : uniquement si poste lié à jeu vidéo, animation, 3D, design, UI/UX poussé. Sinon écrire uniquement "Infographie 3D" dans Autres Compétences, sans détailler les logiciels.
+- Catégorie "Data & IA" : uniquement si le poste mentionne explicitement Data, IA, données. Sinon inclure seulement LLM et data analytics dans Outils ou Développement.
+- Catégorie "En apprentissage" : obligatoire si des compétences demandées par le poste ne sont pas dans la liste des compétences maîtrisées. Inclure uniquement les compétences demandées par l'offre que le candidat ne maîtrise pas.
+- Adaptation au type de poste : dev pur = pas de catégorie Data/IA séparée. Poste Data/IA = catégorie Data & IA complète. Poste 3D = Infographie 3D détaillée.
+- Chaque catégorie : 50 à 150 caractères de compétences.
+- Principe fondamental : Pertinence supérieure à Exhaustivité.
+
+Réponds UNIQUEMENT avec le JSON brut valide. Ta réponse doit obligatoirement commencer par le caractère { et se terminer par le caractère }. Aucun markdown, aucun backtick, aucun bloc de code, aucun texte avant ou après.
+{"categories": [{"name": "NomCategorie", "skills": ["skill1", "skill2"]}]}$$, FALSE);
 
 
 

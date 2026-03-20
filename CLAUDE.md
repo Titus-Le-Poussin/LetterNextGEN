@@ -158,7 +158,7 @@ Le fichier CLAUDE.md contient des consignes pour claude (celle-ci), mais contien
   - [x] `middleware/auth.middleware.js` — verification JWT (23 Fevrier 2026)
   - [x] `middleware/error.middleware.js` — gestion d'erreurs (24 Fevrier 2026)
 - [x] Completer `server.js` — point d'entree Express complet (24 Fevrier 2026)
-- [ ] Tester toutes les routes avec Postman
+- [x] Tester toutes les routes avec Postman (3 Mars 2026) — Auth, Prompts, Letter Template, Letter Generated, Resume Template, Resume Generated, Skills testés. Routes AI en cours (Gemini quota bloqué, Claude fonctionnel).
 
 ### Phase 4 — Frontend React : EN COURS
 > **C'est Timothee qui code tout ca.**
