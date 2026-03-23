@@ -166,11 +166,11 @@ Le fichier CLAUDE.md contient des consignes pour claude (celle-ci), mais contien
 - [x] Structure de dossiers `front-end/` creee (9 Fevrier 2026)
 - [x] Initialiser avec `npm create vite@latest` (React + Vite) (17 Fevrier 2026)
 - [x] Integrer Tailwind CSS dans React (plugin @tailwindcss/vite) (17 Fevrier 2026)
-- [ ] Migrer le portfolio vers React (composants)
+- [x] Migrer le portfolio vers React (composants) (23 Mars 2026)
 - [x] Migrer le generateur de lettres vers React (composants : OfferSection, EditorSection, PreviewSection, Header avec toggle) (17 Fevrier 2026)
-- [ ] Creer pages Login / Register
-- [ ] Creer les services API (connexion frontend → backend)
-- [ ] `AuthContext.jsx` pour gerer la session JWT
+- [x] Creer pages Login / Register (23 Mars 2026)
+- [x] Creer les services API auth (auth.service.js) (23 Mars 2026)
+- [x] `AuthContext.jsx` pour gerer la session JWT (23 Mars 2026)
 
 ### Phase 5 — Integration IA : A FAIRE
 > **C'est Timothee qui code tout ca.**
