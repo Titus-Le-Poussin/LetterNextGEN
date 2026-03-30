@@ -95,7 +95,7 @@ Timothee ITHIER$$, TRUE),
 
 (1, 'Modele 2', $$Madame, Monsieur,
 
-Votre annonce pour le poste de {{field7}} a immediatement retenu mon attention. Je suis convaincu que {{field6}} et son role dans {{field1}} representent le cadre ideal pour mon debut de carriere.
+Votre annonce pour le poste de {{field6}} a immediatement retenu mon attention. Je suis convaincu que {{field7}} et son role dans {{field1}} representent le cadre ideal pour mon debut de carriere.
 
 Mon parcours, notamment ma formation a EPITECH Lyon, m'a permis d'acquerir de solides bases {{field3}}. J'ai egalement eu l'opportunite de travailler sur des projets concrets, y compris {{field4}}, demontrant mon engagement pour des projets orientes {{field5}}.
 

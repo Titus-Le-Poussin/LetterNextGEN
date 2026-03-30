@@ -16,6 +16,9 @@ function JobTools(){
     const [showCVEditor, setShowCVEditor] = useState(true)
     const [showLetterPreview, setShowLetterPreview] = useState(true)
     const [showCVPreview, setShowCVPreview] = useState(true)
+    const [templateContent, setTemplateContent] = useState("")
+    const [fontSize, setFontSize] = useState(11)
+    const [fields, setFields] = useState({ field1: "",  field2: "", field3: "", field4: "", field5: "", field6: "", field7: "" })  
 
     return(
         <div className="font-sans bg-gradient-to-br from-[#288653] to-[#3b6b49] min-h-screen p-5">
@@ -35,17 +38,27 @@ function JobTools(){
                     setShowLetterPreview={setShowLetterPreview}
                     showCVPreview={showCVPreview}
                     setShowCVPreview={setShowCVPreview}
+                    
+                    
                 />
                 <div className="grid grid-cols-2 gap-5">
                     <div className="col-start-1 flex flex-col gap-5">
                         {showLetterTemplate && <LetterTemplate />}
-                        {showLetterOffer && <LetterOffer />}
-                        {showLetterEditor && <LetterEditor />}
+                        {showLetterOffer && <LetterOffer onResult={setFields} />}
+                        {showLetterEditor && <LetterEditor 
+                        fields={fields} 
+                        templateContent={templateContent} 
+                        onTemplateSelect={setTemplateContent} 
+                        onFieldsChange={setFields} 
+                        onFontSizeChange={setFontSize} />}
                         {showCVTemplate && <CVTemplate />}
                         {showCVEditor && <div>CVEditor (à créer)</div>}
                     </div>
                     <div className="col-start-2 flex flex-col gap-5">
-                        {showLetterPreview && <LetterPreview />}
+                        {showLetterPreview && <LetterPreview 
+                        fields={fields} 
+                        templateContent={templateContent} 
+                        fontSize={fontSize} />}
                         {showCVPreview && <CVPreview />}
                     </div>
                 </div>

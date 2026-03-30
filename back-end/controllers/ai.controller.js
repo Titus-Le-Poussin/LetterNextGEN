@@ -1,12 +1,8 @@
 
 const analyzeLetter = async (req, res) => {
-  const { job_offer, prompt_id } = req.body
+  const { job_offer, prompt_content } = req.body
     try {
-    const PromptModel = require('../models/prompt.model')
-    const promptResult = await PromptModel.getById(prompt_id)
-    const prompt = promptResult.rows[0].content
-
-
+    const prompt = prompt_content
     const { GoogleGenerativeAI } = require('@google/generative-ai')
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" })
@@ -18,9 +14,7 @@ const analyzeLetter = async (req, res) => {
     } catch (erreurGemini) {
       console.error('Gemini error:', erreurGemini)
       try {
-        const PromptModel = require('../models/prompt.model')
-        const promptResult = await PromptModel.getById(prompt_id)
-        const prompt = promptResult.rows[0].content
+        const prompt = prompt_content
         const Anthropic = require('@anthropic-ai/sdk')
         const client = new Anthropic({ apiKey: process.env.CLAUDE_API_KEY })
         const message = await client.messages.create({

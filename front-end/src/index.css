@@ -7,4 +7,13 @@
     --color-fond: #f5f5f5;
     --color-hero: #e8ede9;                            
     --color-texte: #222222;
-  }   
+  }
+
+.dynamic-field {
+    background-color: #d8f5d0;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-style: italic;
+    color: #005c1c;
+    font-weight: 500;
+}
