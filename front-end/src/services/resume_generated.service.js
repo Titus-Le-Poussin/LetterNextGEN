@@ -13,14 +13,14 @@ export async function getResume_generated(token) {
     return data
 }
 
-export async function createResume_generated(token, name, content) {
+export async function createResume_generated(token, job_title, skills) {
     const response = await fetch("http://localhost:8080/api/resume-generated", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({ name, content })
+        body: JSON.stringify({ company_name: "", job_title, job_offer: "", skills })
     })
     const data = await response.json()
     if (!response.ok) {

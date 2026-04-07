@@ -15,14 +15,14 @@ export async function getLetter_generated(token) {
 
 }
 
-export async function createLetter_generated (token, name, content) {
+export async function createLetter_generated (token, company_name, job_title, job_offer, letter_content ) {
     const response = await fetch("http://localhost:8080/api/letter-generated", {
         method: "POST",
         headers: { "Content-Type" :
             "application/json",
             "Authorization": `Bearer ${token}`
         },
-        body:JSON.stringify({ name, content })
+        body:JSON.stringify({ company_name, job_title, job_offer, letter_content })
     })
     const data = await response.json()
     if (!response.ok) {

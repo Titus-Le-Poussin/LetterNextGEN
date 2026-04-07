@@ -17,7 +17,7 @@ function LetterPreview({ fields, templateContent, fontSize }) {
         <div className="bg-white p-4 rounded-2xl shadow-xl">
             <h2 className="text-gray-800 mb-5 text-xl font-bold">Apercu de la lettre</h2>
 
-            <div id="letterPreview" className="bg-white border border-gray-300 rounded-lg overflow-hidden relative aspect-[210/297] flex">
+            <div id="letterPreview" className="bg-white border border-gray-300 rounded-lg overflow-hidden relative aspect-[210/297] flex max-w-[520px] mx-auto w-full">
                 
                 <div className="w-[150px] bg-[#2c7348] pt-20 px-2 pb-5 shrink-0 order-2">
                     <div className="flex flex-col gap-6">

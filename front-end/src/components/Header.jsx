@@ -5,7 +5,8 @@ function Header({
     showCVTemplate, setShowCVTemplate,
     showCVEditor, setShowCVEditor,
     showLetterPreview, setShowLetterPreview,
-    showCVPreview, setShowCVPreview
+    showCVPreview, setShowCVPreview,
+    showSkillsManager, setShowSkillsManager
 }) {
     const btn = (active) =>
         `px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
@@ -25,6 +26,7 @@ function Header({
             <button type="button" onClick={() => setShowLetterPreview(!showLetterPreview)} className={btn(showLetterPreview)}>Preview</button>
 
             <span className="text-xs text-gray-400 font-semibold uppercase ml-4">CV</span>
+            <button type="button" onClick={() => setShowSkillsManager(!showSkillsManager)} className={btn(showSkillsManager)}>Skills</button>
             <button type="button" onClick={() => setShowCVTemplate(!showCVTemplate)} className={btn(showCVTemplate)}>Template</button>
             <button type="button" onClick={() => setShowCVEditor(!showCVEditor)} className={btn(showCVEditor)}>Editor</button>
             <button type="button" onClick={() => setShowCVPreview(!showCVPreview)} className={btn(showCVPreview)}>Preview</button>

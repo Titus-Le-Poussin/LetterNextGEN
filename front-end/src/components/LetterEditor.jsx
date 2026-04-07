@@ -2,7 +2,7 @@ import {useState, useEffect, useContext } from 'react'
 import { AuthContext } from '../context/AuthContext'
 import { getLetter_template, createLetter_template, deleteLetter_template } from '../services/letter_template.service'
 import { jsPDF } from 'jspdf'
-
+import { createLetter_generated } from '../services/letter_generated.service'  
 
 function LetterEditor({ fields, onTemplateSelect, onFieldsChange, onFontSizeChange, templateContent }) {
     const { token } = useContext(AuthContext)
@@ -20,7 +20,7 @@ function LetterEditor({ fields, onTemplateSelect, onFieldsChange, onFontSizeChan
       })          
   }, [])
 
-    function generatePDF() {
+    async function generatePDF() {
         const pdf = new jsPDF('p', 'mm', 'a4')
         const companyName = fields.field7 || "Entreprise"
         const jobName = fields.field6 || "Poste"
@@ -83,10 +83,8 @@ function LetterEditor({ fields, onTemplateSelect, onFieldsChange, onFontSizeChan
                 if (isLast) pdf.setFont('helvetica', 'normal')
                 y += lineHeight * 0.8
             }
-        })
-        pdf.setTextColor(255, 255, 255)
-        pdf.setFontSize(4)                            
-
+        })                            
+        await createLetter_generated(token, companyName, jobName, "", editableBody.innerText)
         pdf.save('Lettre_Motivation_Timothee_ITHIER_' + companyName + '_' + jobName + '.pdf')
     }
 
