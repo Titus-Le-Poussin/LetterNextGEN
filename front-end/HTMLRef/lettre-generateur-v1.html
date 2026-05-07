@@ -1,0 +1,658 @@
+<!--
+================================================================================
+GENERATEUR DE LETTRES v1 - Version Tailwind CSS
+================================================================================
+Migration du generateur de lettres original vers Tailwind CSS.
+Reference: _original/lettre/lettre-generateur.html
+JavaScript conserve intact.
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lettre de Motivation</title>
+    <link rel="stylesheet" href="../css/output.css">
+    <style>
+        /* Styles specifiques non disponibles en Tailwind */
+        .dynamic-field {
+            background-color: #d8f5d0;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-style: italic;
+            color: #005c1c;
+            font-weight: 500;
+        }
+        .letter-body[contenteditable="true"]:focus {
+            outline: 2px solid #81c70067;
+            outline-offset: 5px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gradient-to-br from-[#288653] to-[#3b6b49] min-h-screen p-5">
+
+    <div class="container mx-auto">
+        <!-- FIRST SECTION: Offre + Editor -->
+        <div class="flex flex-wrap gap-8 w-full p-2 max-lg:flex-col">
+
+            <!-- OFFER SECTION -->
+            <div class="bg-white p-4 w-[48%] rounded-2xl shadow-xl max-lg:w-[90%] max-lg:mx-auto">
+                <h1 class="text-gray-800 mb-8 text-2xl font-bold">Offre</h1>
+
+                <div class="mb-6">
+                    <label class="block mb-2 text-[#005c1c] font-semibold text-sm">Offre d'emplois</label>
+                    <textarea id="jobOffer" placeholder="Collez l'offre d'emploi ici..." class="w-full p-3 border-2 border-gray-200 rounded-lg text-sm h-52 resize-none focus:outline-none focus:border-[#005c1c] focus:ring-2 focus:ring-[#005c1c]/10"></textarea>
+                </div>
+
+                <hr class="border-0 h-px bg-gray-200 my-8">
+
+                <h2 class="text-gray-800 mb-5 text-xl font-bold">Prompt IA</h2>
+
+                <div class="mb-6">
+                    <div class="mb-6">
+                        <label for="promptTemplateSelect" class="block mb-2 text-[#005c1c] font-semibold text-sm">Modele du Prompt</label>
+                        <select id="promptTemplateSelect" class="w-full p-3 border-2 border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#005c1c] focus:ring-2 focus:ring-[#005c1c]/10">
+                            <option value="default">Modele Standard (Alternance)</option>
+                        </select>
+                    </div>
+
+                    <label class="block mb-2 text-[#005c1c] font-semibold text-sm">Instructions pour l'IA</label>
+                    <textarea id="aiPrompt" placeholder="Prompt pour l'IA..." class="w-full p-3 border-2 border-gray-200 rounded-lg text-sm h-52 resize-none focus:outline-none focus:border-[#005c1c] focus:ring-2 focus:ring-[#005c1c]/10">Tu es un assistant qui analyse des offres d'emploi pour remplir automatiquement les champs d'une lettre de motivation.
+
+A partir de l'offre d'emploi fournie, extrais les informations suivantes au format JSON :
+
+{
+  "field1": "Domaine de l'entreprise (ex: la mobilite et l'innovation ferroviaire)",
+  "field2": "Type de projet, produit ou mission de l'entreprise (ex: digitalisation des services, optimisation des systemes)",
+  "field3": "Langages, frameworks, outils recherches (ex: programmation full stack, Python, React)",
+  "field4": "Technologies de l'entreprise / type de projet (ex: developpement d'applications web)",
+  "field5": "Type de projet / technologie a mettre en avant par le candidat (ex: developpement web et informatique)",
+  "field6": "Nom de l'entreprise",
+  "field7": "Intitule exact du poste"
+}
+
+Regles importantes :
+- Pour field1 : identifie le SECTEUR d'activite principal
+- Pour field2 : liste les MISSIONS ou PROJETS concrets
+- Pour field3 : extrais les COMPETENCES TECHNIQUES demandees
+- Pour field4 : identifie les TECHNOLOGIES ou TYPES DE PROJETS de l'entreprise
+- Pour field5 : suggere des projets pertinents que le candidat pourrait mettre en avant
+- Reponds UNIQUEMENT avec le JSON, sans texte supplementaire</textarea>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block mb-2 text-[#005c1c] font-semibold text-sm">Enregistrer le prompt</label>
+                    <div class="flex flex-row">
+                        <input type="text" id="fieldNamePrompt" placeholder="Nom du prompt" class="w-1/2 p-3 border-2 border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#005c1c] focus:ring-2 focus:ring-[#005c1c]/10">
+                        <button type="button" id="RegisterPromptBtn" onclick="RegisterPrompt()" class="w-[20%] p-2 ml-auto bg-gradient-to-br from-[#0b2e00] to-[#006128] text-white border-none rounded-lg text-xs font-semibold cursor-pointer hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-400/50 transition-all">Save Prompt</button>
+                    </div>
+                </div>
+
+                <button type="button" id="generateBtn" onclick="generateLetter()" class="w-full p-4 bg-gradient-to-br from-[#0b2e00] to-[#006128] text-white border-none rounded-lg text-base font-semibold cursor-pointer hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-400/50 transition-all">Remplir Automatiquement avec l'IA</button>
+
+                <div id="loadingMessage" style="display: none;" class="mt-4 text-[#005c1c] font-semibold text-center">
+                    Analyse en cours...
+                </div>
+                <div id="errorMessage" style="display: none;" class="mt-4 text-red-600 font-semibold text-center"></div>
+            </div>
+
+            <!-- EDITOR SECTION -->
+            <div class="bg-white p-4 w-[48%] rounded-2xl shadow-xl max-lg:w-[90%] max-lg:mx-auto">
+                <h1 class="text-gray-800 mb-8 text-2xl font-bold">Lettre de motivation</h1>
+
+                <form id="letterForm">
+                    <div class="mb-6">
+                        <label for="templateSelect" class="block mb-2 text-[#005c1c] font-semibold text-sm">Selectionner un modele :</label>
+                        <select id="templateSelect" class="w-full p-3 border-2 border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#005c1c] focus:ring-2 focus:ring-[#005c1c]/10">
+                            <option value="default">Modele Standard (Alternance)</option>
+                            <option value="2">Modele 2</option>
+                            <option value="3">Modele 3</option>
+                            <option value="4">Modele 4</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block mb-2 text-[#005c1c] font-semibold text-sm">Enregistrer le modele de lettre</label>
+                        <div class="flex flex-row">
+                            <input type="text" id="fieldNameModelLetter" placeholder="Nom du Modele de lettre" class="w-1/2 p-3 border-2 border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#005c1c] focus:ring-2 focus:ring-[#005c1c]/10">
+                            <button type="button" id="RegisterModelBtn" onclick="RegisterLetter()" class="w-[20%] p-2 ml-auto bg-gradient-to-br from-[#0b2e00] to-[#006128] text-white border-none rounded-lg text-xs font-semibold cursor-pointer hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-400/50 transition-all">Save Modele</button>
+                        </div>
+                    </div>
+
+                    <hr class="border-0 h-px bg-gray-200 my-8">
+
+                    <h2 class="text-gray-800 mb-5 text-xl font-bold">Champs a personnaliser</h2>
+
+                    <div class="mb-6">
+                        <label class="block mb-2 text-[#005c1c] font-semibold text-sm">Domaine de l'entreprise:</label>
+                        <input type="text" id="field1" placeholder="mobilite et l'innovation ferroviaire" required class="w-full p-3 border-2 border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#005c1c] focus:ring-2 focus:ring-[#005c1c]/10">
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block mb-2 text-[#005c1c] font-semibold text-sm">Type de projet, produit ou mission de l'entreprise:</label>
+                        <input type="text" id="field2" placeholder="digitalisation des services, l'optimisation des systemes de transport ou la gestion des infrastructures" required class="w-full p-3 border-2 border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#005c1c] focus:ring-2 focus:ring-[#005c1c]/10">
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block mb-2 text-[#005c1c] font-semibold text-sm">Langages, frameworks, outils du candidat:</label>
+                        <input type="text" id="field3" placeholder="programmation full stack, developpement web et outils numeriques" required class="w-full p-3 border-2 border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#005c1c] focus:ring-2 focus:ring-[#005c1c]/10">
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block mb-2 text-[#005c1c] font-semibold text-sm">Technologies de l'entreprise / type de projet de l'entreprise:</label>
+                        <input type="text" id="field4" placeholder="developpement d'applications et d'outils interactifs" required class="w-full p-3 border-2 border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#005c1c] focus:ring-2 focus:ring-[#005c1c]/10">
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block mb-2 text-[#005c1c] font-semibold text-sm">Type de projet / technologie effectue par le candidat :</label>
+                        <input type="text" id="field5" placeholder="developpement web et informatique" required class="w-full p-3 border-2 border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#005c1c] focus:ring-2 focus:ring-[#005c1c]/10">
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block mb-2 text-[#005c1c] font-semibold text-sm">Intitule du poste</label>
+                        <input type="text" id="field7" placeholder="Developpeur Web" required class="w-full p-3 border-2 border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#005c1c] focus:ring-2 focus:ring-[#005c1c]/10">
+                    </div>
+
+                    <hr class="border-0 h-px bg-gray-200 my-8">
+
+                    <div class="mb-6">
+                        <label class="block mb-2 text-[#005c1c] font-semibold text-sm">Nom de l'Entreprise:</label>
+                        <input type="text" id="field6" placeholder="SNCF" required class="w-full p-3 border-2 border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#005c1c] focus:ring-2 focus:ring-[#005c1c]/10">
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block mb-2 text-[#005c1c] font-semibold text-sm">Taille du texte (PDF) :</label>
+                        <div class="flex items-center gap-4 mt-2">
+                            <button type="button" onclick="decreaseSize()" class="w-10 h-10 bg-gradient-to-br from-[#0b2e00] to-[#006128] text-white border-none rounded-lg text-xl font-bold cursor-pointer hover:scale-110 transition-transform">-</button>
+                            <span id="sizeDisplay" class="text-lg font-bold text-gray-800 min-w-[30px] text-center">11</span>
+                            <button type="button" onclick="increaseSize()" class="w-10 h-10 bg-gradient-to-br from-[#0b2e00] to-[#006128] text-white border-none rounded-lg text-xl font-bold cursor-pointer hover:scale-110 transition-transform">+</button>
+                        </div>
+                    </div>
+
+                    <button type="button" onclick="generatePDF()" class="w-full p-4 bg-gradient-to-br from-[#0b2e00] to-[#006128] text-white border-none rounded-lg text-base font-semibold cursor-pointer hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-400/50 transition-all">Telecharger en PDF</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- PREVIEW SECTION -->
+        <div class="bg-white p-4 mt-8 rounded-2xl shadow-xl max-lg:w-[90%] max-lg:mx-auto">
+            <h2 class="text-gray-800 mb-5 text-xl font-bold">Apercu de la lettre</h2>
+
+            <div id="letterPreview" class="bg-white border border-gray-300 rounded-lg overflow-hidden relative min-h-[600px] flex">
+                <!-- Sidebar -->
+                <div class="w-[150px] bg-[#2c7348] pt-20 px-2 pb-5 shrink-0 order-2">
+                    <div class="flex flex-col gap-6">
+                        <div class="text-white">
+                            <strong class="block text-[9px] mb-1 font-bold">EMAIL</strong>
+                            <p class="text-[8px] leading-tight break-words">timotheeithier@gmail.com</p>
+                        </div>
+                        <div class="text-white">
+                            <strong class="block text-[9px] mb-1 font-bold">TELEPHONE</strong>
+                            <p class="text-[8px] leading-tight">+33 7 89 42 79 78</p>
+                        </div>
+                        <div class="text-white">
+                            <strong class="block text-[9px] mb-1 font-bold">ADRESSE</strong>
+                            <p class="text-[8px] leading-tight">16 rue Lamothe<br>Lyon 69007, France</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="flex-1 order-1">
+                    <div class="bg-[#296b3f] py-10 px-8 text-white">
+                        <h3 class="text-white text-xl m-0 font-bold">TIMOTHEE ITHIER</h3>
+                    </div>
+                    <div class="letter-body p-8 text-xs leading-relaxed text-gray-800" contenteditable="true" id="editableBody">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        let fontSize = 11;
+
+        const letterTemplates = {
+            'default': `
+                <p>Bonjour Madame, Monsieur,</p>
+
+                <p>Je souhaite vous proposer ma candidature, car votre entreprise correspond a ce que je recherche pour mon alternance.</p>
+
+                <p>Votre entreprise se demarque a mes yeux grace a son role dans <span class="dynamic-field" id="preview1"></span>, ce qui motive clairement ma candidature.</p>
+
+                <p>Votre organisation et la logique derriere vos travaux me donnent envie de m'y impliquer a mon tour, surtout pour participer a des projets comme <span class="dynamic-field" id="preview2"></span> et contribuer a leur realisation.</p>
+
+                <p>Je cherche un environnement ou je peux m'investir dans des projets utiles, monter en competences et comprendre en profondeur comment une equipe professionnelle fait evoluer un produit.</p>
+
+                <p>Je suis actuellement en formation chez EPITECH Lyon, et je developpe mes competences en <span class="dynamic-field" id="preview3"></span>. J'ai deja travaille sur des projets academiques et personnels <span class="dynamic-field" id="preview4"></span>. Ces projets m'ont permis de developper une approche autonome, methodique et orientee resultats.</p>
+
+                <p>Je peux ainsi apporter a votre equipe mes competences techniques tout en m'adaptant rapidement a vos outils et methodes.</p>
+
+                <p>Je peux apporter un profil polyvalent, capable de m'adapter a differents outils et technologies.</p>
+
+                <p>De plus, les projets que j'ai realises <span class="dynamic-field" id="preview5"></span> me donnent deja une experience concrete proche de vos activites, ce qui facilitera notre collaboration et l'atteinte de vos objectifs. En combinant ma polyvalence a la diversite de vos projets, nous pourrons atteindre des resultats concrets rapidement et efficacement.</p>
+
+                <p>Je serais ravi d'echanger avec vous pour vous montrer plus en detail mes competences et ma motivation.</p>
+
+                <p>Je vous remercie pour votre temps et votre consideration.</p>
+
+                <p class="signature mt-8 font-semibold">Timothee ITHIER</p>
+            `,
+            '2': `
+                <p>Madame, Monsieur,</p>
+
+                <p>Votre annonce pour le poste de <span class="dynamic-field" id="preview7"></span> a immediatement retenu mon attention. Je suis convaincu que <span class="dynamic-field" id="preview6"></span> et son role dans <span class="dynamic-field" id="preview1"></span> representent le cadre ideal pour mon debut de carriere.</p>
+
+                <p>Mon parcours, notamment ma formation a EPITECH Lyon, m'a permis d'acquerir de solides bases <span class="dynamic-field" id="preview3"></span>. J'ai egalement eu l'opportunite de travailler sur des projets concrets, y compris <span class="dynamic-field" id="preview4"></span>, demontrant mon engagement pour des projets orientes <span class="dynamic-field" id="preview5"></span>.</p>
+
+                <p>Je suis particulierement enthousiaste a l'idee de contribuer a des missions telles que <span class="dynamic-field" id="preview2"></span>. Je suis jeune diplome mais je suis pret a investir toute mon energie pour apprendre rapidement et m'integrer efficacement a votre equipe.</p>
+
+                <p>Ma motivation, ma soif d'apprendre et ma capacite d'adaptation sont mes principaux atouts. Je serais ravi de vous exposer mes competences plus en detail lors d'un entretien.</p>
+
+                <p>Dans l'attente de votre retour, veuillez agreer, Madame, Monsieur, l'expression de mes salutations distinguees.</p>
+
+                <p class="signature mt-8 font-semibold">Timothee ITHIER</p>
+            `,
+            '3': `
+<p>Bonjour Madame, Monsieur,</p>
+
+<p>
+    Votre entreprise retient mon attention grace
+    <span class="dynamic-field" id="preview1"></span>.
+</p>
+
+<p>
+    Les projets que vous developpez, notamment
+    <span class="dynamic-field" id="preview2"></span>,
+    correspondent parfaitement a ce que je recherche.
+</p>
+
+<p>
+    Je developpe actuellement mes competences en
+    <span class="dynamic-field" id="preview3"></span>
+    et j'ai deja realise des projets personnels en
+    <span class="dynamic-field" id="preview4"></span>.
+</p>
+
+<p>
+    Ces experiences m'ont permis de travailler de maniere autonome, efficace,
+    et d'adopter une approche structuree.
+</p>
+
+<p>
+    Je pourrai ainsi m'impliquer rapidement dans vos projets et contribuer
+    avec mes competences techniques.
+</p>
+
+<p>
+    Les similitudes entre vos activites et les projets que j'ai realises en
+    <span class="dynamic-field" id="preview5"></span>
+    constituent une base solide pour une collaboration productive.
+</p>
+
+<p>
+    Je serais ravi d'en discuter davantage avec vous.
+</p>
+
+<p class="signature mt-8 font-semibold">Timothee ITHIER</p>
+
+            `,
+            '4' : `<p>Bonjour Madame, Monsieur,</p>
+
+<p>Je me permets de vous adresser ma candidature, car j'ai ete particulierement attire par votre travail dans <span class="dynamic-field" id="preview1">(Domaine de l'entreprise)</span> et vos projets autour de <span class="dynamic-field" id="preview2">(type de projet, produit ou mission)</span>.<br>
+Votre facon de transformer des besoins concrets en solutions fonctionnelles me parle beaucoup, car c'est ce type de contribution que j'aimerais apporter dans mon alternance.</p>
+
+<p>Je progresse actuellement sur <span class="dynamic-field" id="preview3">(langages, frameworks, outils du candidat)</span> utilisant <span class="dynamic-field" id="preview4">(technologies de l'entreprise / type de projet)</span>.<br>
+J'ai deja realise quelques projets qui m'ont permis de tester mes competences et de trouver des solutions concretes.<br>
+Cette polyvalence me permettra d'apporter rapidement ces acquis a vos equipes.</p>
+
+<p>En mettant mes acquis au service de votre equipe sur <span class="dynamic-field" id="preview5">(type de projet / technologie du candidat)</span> pour le poste de <span class="dynamic-field" id="preview7">(intitule du poste)</span> chez <span class="dynamic-field" id="preview6">(nom de l'entreprise)</span>, nous pourrons explorer de nouvelles idees, ameliorer vos solutions et progresser dans un cadre dynamique.</p>
+
+<p>Merci pour votre attention, je reste a votre disposition pour un echange ou un entretien.</p>
+
+<p class="signature mt-8 font-semibold">Timothee ITHIER</p>`
+
+        };
+        const JobData = {
+            'Developpeur Web' : {
+                field3: "programmation full stack, developpement web front/back",
+                field5: "creation d'un prototype de site portfolio en HTML/CSS : j'ai cree un site simple et responsive pour presenter mes projets, avec une navigation fluide entre les sections Projets, Competences et Contact. L'accent est mis sur la clarte visuelle et l'accessibilite."
+            },
+            'Infographiste' : {
+        field3: "modelisation, rigging, animation, optimisation d'assets",
+        field5: "realisation d'assets 3D optimises pour differents supports, incluant modelisation, texturing et rigging. Travail sur l'animation technique et la resolution de problemes lies aux performances dans des projets personnels et scolaires."
+            },
+            'Developpeur Python' : {
+        field3: "programmation Python, automatisation, scripts utilitaires",
+        field5: "developpement de petits projets Python pour automatiser des taches ou manipuler des donnees, dans le but de renforcer mes bases en programmation et de les appliquer a des projets plus complexes."
+            }
+        };
+
+        const companyData = {
+    'SNCF': {
+        field1: "la mobilite et l'innovation ferroviaire",
+        field2: "la digitalisation des services, l'optimisation des systemes de transport ou la gestion des infrastructures",
+        field4: "comme le developpement d'applications et d'outils interactifs",
+    },
+    'Google': {
+        field1: "la technologie et l'innovation numerique",
+        field2: "le developpement de solutions cloud, intelligence artificielle et services web",
+        field4: "le developpement d'applications web scalables",
+    },
+    'Airbus': {
+        field1: "l'aeronautique et l'innovation technologique",
+        field2: "la conception d'aeronefs, systemes embarques et digitalisation industrielle",
+        field4: "le developpement de systemes embarques et logiciels critiques",
+    },
+    'Orange': {
+        field1: "la telecommunications et la transformation digitale",
+        field2: "le deploiement de reseaux, services cloud et cybersecurite",
+        field4: "le developpement d'infrastructures reseau et applications telecom",
+    },
+    'Capgemini': {
+        field1: "le conseil en transformation numerique",
+        field2: "l'accompagnement des entreprises dans leur digitalisation et projets IT",
+        field4: "le developpement de solutions sur mesure pour divers clients",
+    },
+    'Thales': {
+        field1: "defense, aeronautique et cybersecurite",
+        field2: "conception de systemes critiques, intelligence artificielle et cyberdefense",
+        field4: "developpement de systemes securises et critiques",
+    },
+    'Societe Generale': {
+        field1: "services financiers et l'innovation bancaire",
+        field2: "developpement d'applications bancaires, fintech et services digitaux",
+        field4: "developpement d'applications financieres et systemes transactionnels",
+    },
+    'EDF': {
+        field1: "energie et la transition ecologique",
+        field2: "production d'energie, smart grids et digitalisation energetique",
+        field4: "developpement de solutions energetiques intelligentes",
+    },
+    'Renault': {
+        field1: "automobile et la mobilite durable",
+        field2: "vehicules connectes, systemes embarques et innovation automobile",
+        field4: "developpement de logiciels automobiles et systemes connectes",
+    },
+    'Dassault Systemes': {
+        field1: "conception 3D et simulation numerique",
+        field2: "developpement de solutions CAO, PLM et jumeau numerique",
+        field4: "developpement de logiciels de conception et simulation",
+    },
+    'Ubisoft': {
+        field1: "jeu video et divertissement interactif",
+        field2: "creation de jeux AAA, moteurs de jeu et technologies immersives",
+        field4: "developpement de jeux video et systemes de gameplay",
+    },
+    'Atos': {
+        field1: "transformation digitale et services IT",
+        field2: "cloud computing, cybersecurite et big data",
+        field4: "developpement de solutions cloud et applications d'entreprise",
+    },
+    'Schneider Electric': {
+        field1: "gestion de l'energie et automatisation",
+        field2: "IoT industriel, smart buildings et efficacite energetique",
+        field4: "developpement de solutions IoT et systemes automatises",
+    },
+    'L\'Oreal': {
+        field1: "beaute et l'innovation digitale",
+        field2: "e-commerce, applications beauty-tech et realite augmentee",
+        field4: "developpement d'applications e-commerce et experiences digitales",
+    },
+    'Decathlon': {
+        field1: "sport et l'innovation retail",
+        field2: "e-commerce, applications mobiles et experience client digitale",
+        field4: "developpement d'applications e-commerce et retail",
+    },
+    'BNP Paribas': {
+        field1: "services bancaires et fintech",
+        field2: "banque digitale, paiements innovants et services financiers",
+        field4: "developpement d'applications bancaires et solutions fintech",
+    },
+    'Criteo': {
+        field1: "publicite digitale et marketing technologique",
+        field2: "machine learning, big data et plateformes publicitaires",
+        field4: "developpement de systemes de recommandation et traitement massif de donnees",
+    },
+    'Deezer': {
+        field1: "streaming musical et innovation audio",
+        field2: "plateformes de streaming, recommandation musicale et applications mobiles",
+        field4: "developpement d'applications de streaming et services audio",
+    },
+    'Doctolib': {
+        field1: "e-sante et digitalisation medicale",
+        field2: "gestion de rendez-vous medicaux, teleconsultation et dossiers patients",
+        field4: "developpement d'applications de sante et services patients",
+    },
+    'Blablacar': {
+        field1: "mobilite partagee et transport collaboratif",
+        field2: "plateforme de covoiturage, applications mobiles et optimisation d'itineraires",
+        field4: "developpement de plateformes de mise en relation et services mobiles",
+    }
+};
+
+function fillCompanyData() {
+    const companyName = document.getElementById('field6').value.trim();
+
+    if (companyData[companyName]) {
+        const data = companyData[companyName];
+
+        document.getElementById('field1').value = data.field1;
+        document.getElementById('field2').value = data.field2;
+        document.getElementById('field4').value = data.field4;
+
+        updateAllPreviews();
+    }
+}
+document.getElementById('field6').addEventListener('input', function() {
+    updatePreview('field6');
+    fillCompanyData();
+});
+document.getElementById('field7').addEventListener('input', function() {
+    updatePreview('field7');
+    fillJobData();
+});
+
+function fillJobData() {
+    const JobName = document.getElementById('field7').value.trim();
+
+    if (JobData[JobName]) {
+        const data = JobData[JobName];
+        document.getElementById('field3').value = data.field3;
+        document.getElementById('field5').value = data.field5;
+        updateAllPreviews();
+    }
+}
+
+        function updatePreview(fieldId) {
+            const input = document.getElementById(fieldId);
+            const preview = document.getElementById(fieldId.replace('field', 'preview'));
+
+
+            const number = fieldId.replace('field', '');
+            let defaultText = '';
+
+            if (number === '1') defaultText = '(Domaine de l\'entreprise)';
+            if (number === '2') defaultText = '(type de projet, produit ou mission)';
+            if (number === '3') defaultText = '(langages, frameworks, outils du candidat)';
+            if (number === '4') defaultText = '(technologies de l\'entreprise / type de projet)';
+            if (number === '5') defaultText = '(type de projet / technologie du candidat)';
+            if (number === '6') defaultText = '(nom de l\'entreprise)';
+            if (number === '7') defaultText = '(intitule du poste)';
+
+            if (preview) {
+                preview.textContent = input.value || defaultText;
+            }
+        }
+
+
+        function updateAllPreviews() {
+            updatePreview('field1');
+            updatePreview('field2');
+            updatePreview('field3');
+            updatePreview('field4');
+            updatePreview('field5');
+            updatePreview('field6');
+            updatePreview('field7');
+        }
+
+
+        function loadTemplate(templateKey) {
+            const editableBody = document.getElementById('editableBody');
+            const templateHtml = letterTemplates[templateKey] || letterTemplates['default'];
+
+
+            editableBody.innerHTML = templateHtml;
+
+
+            editableBody.style.fontSize = fontSize + 'px';
+
+            updateAllPreviews();
+        }
+
+
+
+        document.getElementById('field1').addEventListener('input', () => updatePreview('field1'));
+        document.getElementById('field2').addEventListener('input', () => updatePreview('field2'));
+        document.getElementById('field3').addEventListener('input', () => updatePreview('field3'));
+        document.getElementById('field4').addEventListener('input', () => updatePreview('field4'));
+        document.getElementById('field5').addEventListener('input', () => updatePreview('field5'));
+        document.getElementById('field6').addEventListener('input', () => updatePreview('field6'));
+        document.getElementById('field7').addEventListener('input', () => updatePreview('field7'));
+
+
+        document.getElementById('templateSelect').addEventListener('change', function() {
+            loadTemplate(this.value);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTemplate('default');
+        });
+
+
+        function increaseSize() {
+            if (fontSize < 14) {
+                fontSize++;
+                document.getElementById('sizeDisplay').textContent = fontSize;
+                document.getElementById('editableBody').style.fontSize = fontSize + 'px';
+            }
+        }
+
+        function decreaseSize() {
+            if (fontSize > 8) {
+                fontSize--;
+                document.getElementById('sizeDisplay').textContent = fontSize;
+                document.getElementById('editableBody').style.fontSize = fontSize + 'px';
+            }
+        }
+
+
+        function generatePDF() {
+            const form = document.getElementById('letterForm');
+            if (!form.checkValidity()) {
+                alert('Veuillez remplir tous les champs avant de generer le PDF.');
+                form.reportValidity();
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const companyName = document.getElementById('field6').value.trim() || "Entreprise";
+            const jobName = document.getElementById('field7').value.trim() || "Poste";
+
+            const gradient = pdf.internal.write('q');
+            pdf.setFillColor(41, 107, 63);
+            pdf.rect(0, 0, 175, 50, 'F');
+            pdf.setFillColor(44, 115, 72);
+            pdf.rect(157, 0, 53, 297, 'F');
+
+
+            pdf.setTextColor(255, 255, 255);
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(18);
+            pdf.text('TIMOTHEE ITHIER', 15, 30);
+
+
+            pdf.setTextColor(255, 255, 255);
+            pdf.setFontSize(8);
+            pdf.setFont('helvetica', 'bold');
+
+            let emailY = 60;
+            pdf.text('EMAIL', 165, 55);
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(7);
+            const emailLines = pdf.splitTextToSize('timotheeithier@gmail.com', 18);
+            emailLines.forEach(line => {
+                pdf.text(line, 165, emailY);
+                emailY += 3;
+            });
+
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(8);
+            pdf.text('TELEPHONE', 165, emailY + 5);
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(7);
+            pdf.text('+33 7 89 42 79 78', 165, emailY + 9);
+
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(8);
+            pdf.text('ADRESSE', 165, emailY + 17);
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(7);
+            pdf.text('16 rue Lamothe', 165, emailY + 21);
+            pdf.text('Lyon 69007', 165, emailY + 24);
+            pdf.text('France', 165, emailY + 27);
+
+
+            pdf.setTextColor(0, 0, 0);
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(fontSize);
+
+            let y = 60;
+            const lineHeight = fontSize * 0.45;
+            const maxWidth = 135;
+
+            const editableBody = document.getElementById('editableBody');
+            const paragraphs = editableBody.querySelectorAll('p');
+
+            paragraphs.forEach(p => {
+
+                let text = p.textContent.trim();
+
+                if (p.classList.contains('signature')) {
+                    if (text) {
+                        if (y > 270) {
+                            pdf.addPage();
+                            y = 20;
+                        }
+                        pdf.setFont('helvetica', 'bold');
+                        pdf.text(text, 15, y);
+                        pdf.setFont('helvetica', 'normal');
+                        y += lineHeight * 2;
+                    }
+                    return;
+                }
+
+                if (text) {
+                    const lines = pdf.splitTextToSize(text, maxWidth);
+                    lines.forEach(line => {
+                        if (y > 270) {
+                            pdf.addPage();
+                            y = 20;
+                        }
+                        pdf.text(line, 15, y);
+                        y += lineHeight;
+                    });
+                    y += lineHeight * 0.8;
+                }
+            });
+
+
+            pdf.save('Lettre_Motivation_Timothee_ITHIER_' + companyName + '_' + jobName + '.pdf');
+        }
+    </script>
+</body>
+</html>

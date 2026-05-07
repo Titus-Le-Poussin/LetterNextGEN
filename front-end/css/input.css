@@ -1,0 +1,16 @@
+/*
+ * Fichier source Tailwind CSS
+ * Role: Point d'entree pour la compilation Tailwind
+ * Usage: npm run build:css (compile vers output.css)
+ */
+
+@import "tailwindcss";
+
+@theme {
+  --color-vert-fonce: #0b3d29;
+  --color-vert-moyen: #145c38;
+  --color-vert-bouton: #014421;
+  --color-fond: #f5f5f5;
+  --color-hero: #e8ede9;
+  --color-texte: #222222;
+}
