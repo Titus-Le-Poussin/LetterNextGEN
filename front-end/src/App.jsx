@@ -18,7 +18,8 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path="/" element={<ProtectedRoute><JobTools /></ProtectedRoute>} />
+          <Route path="/" element={<Portfolio />} />
+          <Route path="/admin" element={<ProtectedRoute><JobTools /></ProtectedRoute>} />
           <Route path="/tools" element={<ProtectedRoute redirectTo="/login"><GuestTools /></ProtectedRoute>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

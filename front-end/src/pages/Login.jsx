@@ -27,7 +27,7 @@ function Login() {
       }
       // Routing par identité : admin → outils complets, invité → outils invité
       if (email === ADMIN_EMAIL) {
-        navigate('/', { replace: true })
+        navigate('/admin', { replace: true })
       } else {
         navigate('/tools', { replace: true })
       }
