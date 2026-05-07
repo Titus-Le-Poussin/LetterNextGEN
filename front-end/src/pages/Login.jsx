@@ -22,7 +22,11 @@ function Login() {
       await handleLogin(email, password)
       // Retour au portfolio en mode édition (bouton Admin FAB)
       if (fromPortfolioEdit) {
-        navigate('/portfolio', { replace: true, state: { editMode: true } })
+        if (email === ADMIN_EMAIL) {
+          navigate('/portfolio', { replace: true, state: { editMode: true } })
+        } else {
+          navigate('/tools', { replace: true })
+        }
         return
       }
       // Routing par identité : admin → outils complets, invité → outils invité
@@ -59,7 +63,7 @@ function Login() {
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
-              placeholder="timotheeithier@gmail.com"
+              placeholder="votremail@gmail.com"
               className="bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-green-500 text-sm transition-colors"
             />
           </div>
