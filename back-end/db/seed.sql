@@ -152,6 +152,81 @@ Timothee ITHIER$$, FALSE);
 
 
 
+INSERT INTO portfolio_about (bio, title, phone, email, age, languages) VALUES (
+  'Développeur Full Stack passionné par la Data, l''IA et le développement web. Formé à EPITECH Lyon, je construis des applications complètes — du backend aux interfaces — avec un goût prononcé pour les projets ambitieux et les nouvelles technologies. En recherche d''une alternance pour 2026 sur Lyon et agglomération.',
+  'Développeur Full Stack • Data & IA • Infographie 3D',
+  '07 89 42 79 78',
+  'timotheeithier@gmail.com',
+  22,
+  'Français, Anglais (B2)'
+);
+
+INSERT INTO portfolio_experiences (company, role, period, description, tech_stack, is_current, order_index) VALUES
+('EPITECH Lyon', 'Pre-MSc Intelligence Artificielle & Data Science', 'Sept. 2023 → 2026', 'Formation intensive par projets. Développement full-stack, IA, data, jeux vidéo. Projets en équipe avec méthodologie Agile/Scrum.', '["Java", "Python", "JavaScript", "C", "C++", "Rust", "React", "Node.js", "PostgreSQL"]', TRUE, 0),
+('Projets personnels', 'Développeur & Game Developer', '2022 → Présent', 'Développement de jeux vidéo sur Unreal Engine 5, applications web full-stack, outils IA, pipelines data.', '["Unreal Engine 5", "C++", "React", "Node.js", "Docker", "Python"]', FALSE, 1);
+
+INSERT INTO portfolio_projects (title, short_desc, description, tech_stack, media_url, media_type, github_url, demo_url, order_index, visible) VALUES
+(
+  'Silk and Steel',
+  'Jeu d''action à la troisième personne sur Unreal Engine 5 — vous êtes une araignée robot qui s''éveille lors d''une défaillance système.',
+  'Prototype jouable développé sur Unreal Engine 5. Travail sur le gameplay, le rigging, l''animation et l''optimisation technique. Système de déplacement avancé, IA ennemie avec Behavior Trees, blueprints complexes et supervision de l''équipe de modélisation.',
+  '["Unreal Engine 5", "C++", "Blueprints", "Rigging", "Animation", "Behavior Trees"]',
+  '/picture/NewTrailer _Silk and Steel_.mp4',
+  'video',
+  NULL,
+  'https://docs.google.com/presentation/d/1JNpSLsQ7HOj-iS-nLWMz3qm7ml0GTz2HRVCA0gtNYs4/edit#slide=id.p',
+  0,
+  TRUE
+),
+(
+  'Job Board',
+  'Application web complète type Job Board — front-end, back-end, base de données et authentification.',
+  'Développement front-end avec React et Tailwind CSS. Conception responsive et logique d''interface. Développement back-end avec Node.js et Express. Base de données SQL et système d''authentification complet.',
+  '["React", "Node.js", "Express", "PostgreSQL", "Tailwind CSS", "JWT"]',
+  '/picture/mainpagejob.png',
+  'image',
+  NULL,
+  NULL,
+  1,
+  TRUE
+),
+(
+  'Endless Runner',
+  'Prototype mobile de type Endless Runner centré sur la vitesse, l''esquive et la génération procédurale infinie d''obstacles.',
+  'Système de génération procédurale d''obstacles. Contrôles mobiles responsives. Optimisations mobiles (LOD, pooling, draw calls). Boucle de gameplay simple et efficace.',
+  '["Unreal Engine 5", "C++", "Blueprints", "Mobile", "Génération procédurale"]',
+  '/picture/Prototype Endless game Easy game.mp4',
+  'video',
+  NULL,
+  NULL,
+  2,
+  TRUE
+),
+(
+  'Pixmas',
+  'Jeu 2D Java en pixel-art — un Survivor inspiré de Pac-Man où le Père Noël affronte l''invasion des Grinchs.',
+  'Développement d''un jeu 2D en Java avec un style rétro pixel-art. Système d''entités, gestion des collisions, génération procédurale de labyrinthe et boucle de rendu maison. Structure modulaire pour entités et niveaux.',
+  '["Java", "POO", "Génération procédurale", "Pixel Art", "Game Loop"]',
+  '/picture/pixmas.png',
+  'image',
+  'https://github.com/EpitechMscProPromo2028/T-JAV-501-LYO_9',
+  NULL,
+  3,
+  TRUE
+),
+(
+  'LetterNextGEN',
+  'Générateur de lettres de motivation adaptatif avec IA — analyse les offres d''emploi et personnalise votre candidature.',
+  'Application web full-stack pour générer des lettres de motivation personnalisées grâce à l''IA (Gemini + Claude). Analyse automatique des offres d''emploi, extraction des éléments clés, templates personnalisables, gestion des compétences. Chaque utilisateur dispose de ses propres templates et compétences.',
+  '["React", "Node.js", "Express", "PostgreSQL", "Gemini AI", "Claude AI", "JWT", "Tailwind CSS", "Docker"]',
+  NULL,
+  'image',
+  NULL,
+  '/tools',
+  4,
+  TRUE
+);
+
 INSERT INTO skills (user_id, skill_name, category_name) VALUES
 -- Data & IA
 (1, 'Python', 'Data & IA'),

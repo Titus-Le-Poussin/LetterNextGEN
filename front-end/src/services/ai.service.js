@@ -1,6 +1,7 @@
+import { API_BASE } from './config'
 export async function analyzeLetter(token, job_offer, prompt_content) {
 
-    const response = await fetch("http://localhost:8080/api/ai/analyzeLetter", {
+    const response = await fetch(`${API_BASE}/api/ai/analyzeLetter`, {
         method: "POST",
         headers: { "Content-Type" :
             "application/json",
@@ -17,7 +18,7 @@ export async function analyzeLetter(token, job_offer, prompt_content) {
 }
 
 export async function analyzeResume (token, job_offer, prompt_content) {
-    const response = await fetch("http://localhost:8080/api/ai/analyzeResume", {
+    const response = await fetch(`${API_BASE}/api/ai/analyzeResume`, {
         method: "POST",
         headers: { "Content-Type" :
             "application/json",

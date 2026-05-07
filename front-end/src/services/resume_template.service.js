@@ -1,5 +1,6 @@
+import { API_BASE } from './config'
 export async function getResume_template(token) {
-    const response = await fetch("http://localhost:8080/api/resume-template/me", {
+    const response = await fetch(`${API_BASE}/api/resume-template/me`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -14,7 +15,7 @@ export async function getResume_template(token) {
 }
 
 export async function createResume_template(token, name, content) {
-    const response = await fetch("http://localhost:8080/api/resume-template", {
+    const response = await fetch(`${API_BASE}/api/resume-template`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -30,7 +31,7 @@ export async function createResume_template(token, name, content) {
 }
 
 export async function updateResume_template(token, id, name, content) {
-    const response = await fetch(`http://localhost:8080/api/resume-template/${id}`, {
+    const response = await fetch(`${API_BASE}/api/resume-template/${id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -46,7 +47,7 @@ export async function updateResume_template(token, id, name, content) {
 }
 
 export async function deleteResume_template(token, id) {
-    const response = await fetch(`http://localhost:8080/api/resume-template/${id}`, {
+    const response = await fetch(`${API_BASE}/api/resume-template/${id}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",

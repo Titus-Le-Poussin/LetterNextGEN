@@ -1,6 +1,7 @@
+import { API_BASE } from './config'
 export async function getPrompts(token) {
 
-    const response = await fetch("http://localhost:8080/api/prompts/me", {
+    const response = await fetch(`${API_BASE}/api/prompts/me`, {
         method: "GET",
         headers: { "Content-Type" :
             "application/json",
@@ -16,7 +17,7 @@ export async function getPrompts(token) {
 }
 
 export async function createPrompt (token, name, content) {
-    const response = await fetch("http://localhost:8080/api/prompts", {
+    const response = await fetch(`${API_BASE}/api/prompts`, {
         method: "POST",
         headers: { "Content-Type" :
             "application/json",
@@ -32,7 +33,7 @@ export async function createPrompt (token, name, content) {
 }
 
 export async function updatePrompt (token, id, name, content) {
-    const response = await fetch(`http://localhost:8080/api/prompts/${id}`, {
+    const response = await fetch(`${API_BASE}/api/prompts/${id}`, {
         method: "PUT",
         headers: { "Content-Type" :
             "application/json",
@@ -48,7 +49,7 @@ export async function updatePrompt (token, id, name, content) {
 }
 
 export async function deletePrompt (token, id) {
-    const response = await fetch(`http://localhost:8080/api/prompts/${id}`, {
+    const response = await fetch(`${API_BASE}/api/prompts/${id}`, {
         method: "DELETE",
         headers: { "Content-Type" :
             "application/json",

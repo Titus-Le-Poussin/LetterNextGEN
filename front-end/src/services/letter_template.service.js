@@ -1,6 +1,7 @@
+import { API_BASE } from './config'
 export async function getLetter_template(token) {
 
-    const response = await fetch("http://localhost:8080/api/letter-template/me", {
+    const response = await fetch(`${API_BASE}/api/letter-template/me`, {
         method: "GET",
         headers: { "Content-Type" :
             "application/json",
@@ -16,7 +17,7 @@ export async function getLetter_template(token) {
 }
 
 export async function createLetter_template (token, name, content) {
-    const response = await fetch("http://localhost:8080/api/letter-template", {
+    const response = await fetch(`${API_BASE}/api/letter-template`, {
         method: "POST",
         headers: { "Content-Type" :
             "application/json",
@@ -32,7 +33,7 @@ export async function createLetter_template (token, name, content) {
 }
 
 export async function updateLetter_template (token, id, name, content) {
-    const response = await fetch(`http://localhost:8080/api/letter-template/${id}`, {
+    const response = await fetch(`${API_BASE}/api/letter-template/${id}`, {
         method: "PUT",
         headers: { "Content-Type" :
             "application/json",
@@ -48,7 +49,7 @@ export async function updateLetter_template (token, id, name, content) {
 }
 
 export async function deleteLetter_template (token, id) {
-    const response = await fetch(`http://localhost:8080/api/letter-template/${id}`, {
+    const response = await fetch(`${API_BASE}/api/letter-template/${id}`, {
         method: "DELETE",
         headers: { "Content-Type" :
             "application/json",

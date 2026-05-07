@@ -1,6 +1,7 @@
+import { API_BASE } from './config'
 export async function register(username, email, password) {
 
-    const response = await fetch("http://localhost:8080/api/auth/register", {
+    const response = await fetch(`${API_BASE}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type" :
             "application/json"
@@ -16,7 +17,7 @@ export async function register(username, email, password) {
 }
 
 export async function login (email, password) {
-    const response = await fetch("http://localhost:8080/api/auth/login", {
+    const response = await fetch(`${API_BASE}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type" :
             "application/json"

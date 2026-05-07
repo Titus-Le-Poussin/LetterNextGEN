@@ -1,5 +1,6 @@
+import { API_BASE } from './config'
 export async function getSkills(token) {
-    const response = await fetch("http://localhost:8080/api/skills/me", {
+    const response = await fetch(`${API_BASE}/api/skills/me`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -14,7 +15,7 @@ export async function getSkills(token) {
 }
 
 export async function createSkill(token, skill_name, category_name) {
-    const response = await fetch("http://localhost:8080/api/skills", {
+    const response = await fetch(`${API_BASE}/api/skills`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -30,7 +31,7 @@ export async function createSkill(token, skill_name, category_name) {
 }
 
 export async function deleteSkill(token, id) {
-    const response = await fetch(`http://localhost:8080/api/skills/${id}`, {
+    const response = await fetch(`${API_BASE}/api/skills/${id}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",

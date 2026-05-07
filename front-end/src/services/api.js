@@ -1,5 +1,6 @@
+import { API_BASE } from './config'
 async function apiFetch(endpoint, options) {
-  const url = "http://localhost:8080/api/prompts/me";
+  const url = `${API_BASE}/api/prompts/me`;
   try {
     const response = await fetch(url);
     if (!response.ok) {

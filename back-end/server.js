@@ -4,19 +4,24 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 const authRoutes = require('./routes/auth.routes')
-const aiRoutes = require('./routes/ai.routes') 
+const aiRoutes = require('./routes/ai.routes')
 const promptRoutes = require('./routes/prompts.routes')
 const skillsRoutes = require('./routes/skills.routes')
 const letterGenRoutes = require('./routes/letter_generated.routes')
 const letterTemRoutes = require('./routes/letter_template.routes')
 const resumeGenRoutes = require('./routes/resume_generated.routes')
 const resumeTemRoutes = require('./routes/resume_template.routes')
+const portfolioRoutes = require('./routes/portfolio.routes')
 const errorMiddleware = require('./middleware/error.middleware')
 
 const app = express();
 
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173').split(',')
 var corsOptions = {
-  origin: "http://localhost:5173"
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) callback(null, true)
+    else callback(new Error('Not allowed by CORS'))
+  }
 };
 
 app.use(cors(corsOptions));
@@ -31,6 +36,7 @@ app.use('/api/letter-generated', letterGenRoutes)
 app.use('/api/letter-template', letterTemRoutes)
 app.use('/api/resume-generated', resumeGenRoutes)
 app.use('/api/resume-template', resumeTemRoutes)
+app.use('/api/portfolio', portfolioRoutes)
 
 app.get("/", (req, res) => {
   res.json({ message: "Hello from Backend" });
