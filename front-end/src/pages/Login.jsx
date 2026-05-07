@@ -9,7 +9,7 @@ function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const { handleLogin } = useContext(AuthContext)
+  const { handleLogin, handleLogout } = useContext(AuthContext)
   const navigate = useNavigate()
   const location = useLocation()
   const fromPortfolioEdit = !!location.state?.editMode
@@ -25,7 +25,10 @@ function Login() {
         if (email === ADMIN_EMAIL) {
           navigate('/portfolio', { replace: true, state: { editMode: true } })
         } else {
-          navigate('/tools', { replace: true })
+          await handleLogout()
+          setError('Accès réservé à l\'administrateur.')
+          setLoading(false)                             
+      return  
         }
         return
       }
