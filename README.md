@@ -2,7 +2,7 @@
 
 Portfolio personnel et générateur de lettres de motivation avec IA.
 
-Timothée Ithier — EPITECH Lyon, Pre-MSc Intelligence Artificielle & Data Science.
+Timothée Ithier (EPITECH Lyon, Pre-MSc Intelligence Artificielle & Data Science).
 
 ---
 
@@ -10,9 +10,9 @@ Timothée Ithier — EPITECH Lyon, Pre-MSc Intelligence Artificielle & Data Scie
 
 Le projet se divise en deux parties distinctes.
 
-**Portfolio public** (`/portfolio`) — Vitrine professionnelle accessible à tous. Projets, expériences, compétences, section contact. Le contenu est entièrement gérable depuis une interface d'administration intégrée, accessible uniquement après connexion.
+**Portfolio public** (`/portfolio`) : Vitrine professionnelle accessible à tous. Projets, expériences, compétences, section contact. Le contenu est entièrement gérable depuis une interface d'administration intégrée, accessible uniquement après connexion.
 
-**Générateur de lettres** — Outil d'aide à la candidature qui analyse une offre d'emploi via IA (Google Gemini avec Claude Anthropic en fallback) et génère les éléments clés pour adapter une lettre de motivation. Inclut la gestion de templates, l'export PDF et un gestionnaire de compétences pour le CV.
+**Générateur de lettres** : Outil d'aide à la candidature qui analyse une offre d'emploi via IA (Google Gemini avec Claude Anthropic en fallback) et génère les éléments clés pour adapter une lettre de motivation. Inclut la gestion de templates, l'export PDF et un gestionnaire de compétences pour le CV.
 
 Pour les visiteurs extérieurs, une version invité est disponible à `/tools` après création d'un compte. Elle propose le générateur de lettres avec un set de compétences pré-rempli, sans le générateur de CV (fonctionnalité réservée).
 
